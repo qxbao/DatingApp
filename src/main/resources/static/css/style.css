@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+:root {
+    --bgColor: #f3d6db;
+    --textColor: #333333;
+    --lightTextColor: #747474;
+    --cardBgColor: white;
+    --inputColor: #ababab;
+    --themeColor: #dc391c;
+    font-weight: 400;
+}
+
+[theme="dark"] {
+    --bgColor: #191919;
+    --textColor: #dadada;
+    --lightTextColor: #bdbbbb;
+    --cardBgColor: #262626;
+    font-weight: 300;
+}
+
+body {
+    font-family: "Lato", serif;
+    background: var(--bgColor);
+    color: var(--textColor);
+    transition: .3s all;
+}
+
+.card {
+    background: var(--cardBgColor);
+    color: var(--textColor);
+}
+
+.fw-black {
+    font-weight: 900 !important;
+}
+
+.text-theme {
+    color: var(--themeColor);
+}
+
+.bg-theme {
+    background: var(--themeColor);
+}
+
+.border-theme {
+    border-color: var(--themeColor);
+}
