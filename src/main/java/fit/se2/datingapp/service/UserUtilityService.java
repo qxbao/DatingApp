@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserUtilityService implements UserDetailsService {
-    @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    public UserUtilityService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
@@ -36,5 +38,18 @@ public class UserUtilityService implements UserDetailsService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null && authentication.isAuthenticated() &&
                 !authentication.getPrincipal().equals("anonymousUser");
+    }
+
+    public static User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (isAuth()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof User) {
+                return (User) principal;
+            }
+        }
+
+        return null;
     }
 }

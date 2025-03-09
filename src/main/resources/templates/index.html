@@ -86,6 +86,11 @@
                                 </select>
                             </div>
                             <div class="col-12">
+                                <label class="mb-1 ms-2">Date of birth</label>
+                                <input th:field="*{dob}" placeholder="Select your birthdate..."
+                                       class="border-3 rounded-3 mb-3 form-control" type="date" value="">
+                            </div>
+                            <div class="col-12">
                                 <label class="mb-1 ms-2">Password</label>
                                 <input th:field="*{password}" placeholder="Type here..."
                                        class="border-3 rounded-3 mb-3 form-control" type="password" value=""
@@ -113,7 +118,13 @@
                     <div class="text-start modal-title h4">
                         <div class="fw-bold text-success">Welcome</div>
                     </div>
-                    <button type="button" class="btn-close btn-close-dark" aria-label="Close"></button>
+                    <button
+                        type="button"
+                        class="btn-close btn-close-dark"
+                        aria-label="Close"
+                        role="button"
+                        onclick="$('#registrationSuccessModalToggle').modal('hide')">
+                    </button>
                 </div>
                 <div class="px-4 modal-body">
                     <span class="fw-bold fst-italic">

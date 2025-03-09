@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -26,8 +27,8 @@ public class User implements UserDetails {
     private Long id;
     @Column(name="user_name", nullable = false)
     private String name;
-    @Column(name="user_age", nullable = false)
-    private int age;
+    @Column(name="user_dob", nullable = false)
+    private LocalDate dob; // date of birth
     @Column(name="user_email", nullable = false, unique = true)
     private String email;
     @Column(name="user_role", nullable = false)
