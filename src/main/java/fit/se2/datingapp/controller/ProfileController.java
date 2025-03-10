@@ -21,8 +21,11 @@ public class ProfileController {
     private ProfileRepository profileRepository;
     @GetMapping(value = "/init")
     public String createProfilePage(Model model) {
-        UserProfile profile = new UserProfile();
         User user = UserUtilityService.getCurrentUser();
+        if (profileService.isProfileExist(user)) {
+            return "redirect:/";
+        }
+        UserProfile profile = new UserProfile();
         model.addAttribute("profile", profile);
         model.addAttribute("user", user);
         return "profile/init";
