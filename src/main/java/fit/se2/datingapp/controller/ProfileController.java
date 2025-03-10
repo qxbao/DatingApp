@@ -1,12 +1,15 @@
 package fit.se2.datingapp.controller;
 
+import fit.se2.datingapp.model.User;
 import fit.se2.datingapp.model.UserProfile;
 import fit.se2.datingapp.repository.ProfileRepository;
 import fit.se2.datingapp.service.ProfileUtilityService;
+import fit.se2.datingapp.service.UserUtilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -16,11 +19,19 @@ public class ProfileController {
     private ProfileUtilityService profileService;
     @Autowired
     private ProfileRepository profileRepository;
-    // Todo: Create /profile/init page
     @GetMapping(value = "/init")
-    public String createProfile(Model model) {
+    public String createProfilePage(Model model) {
         UserProfile profile = new UserProfile();
+        User user = UserUtilityService.getCurrentUser();
         model.addAttribute("profile", profile);
+        model.addAttribute("user", user);
         return "profile/init";
+    }
+    @PostMapping(value = "/create")
+    public String createProfile(UserProfile profile) {
+        User user = UserUtilityService.getCurrentUser();
+        profile.setUser(user);
+        profileService.create(profile);
+        return "redirect:/";
     }
 }

@@ -5,10 +5,10 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Table(name = "like")
+@Table(name = "user_like")
 @Entity
 @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
-public class Like {
+public class UserLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_id", nullable = false)

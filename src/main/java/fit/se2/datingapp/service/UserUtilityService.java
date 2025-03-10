@@ -45,7 +45,7 @@ public class UserUtilityService implements UserDetailsService {
 
         if (isAuth()) {
             Object principal = authentication.getPrincipal();
-            if (principal instanceof User) {
+            if (principal instanceof UserDetails) {
                 return (User) principal;
             }
         }

@@ -5,7 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Table(name = "photo")
+@Table(name = "user_photo")
 @Entity
 @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
 public class UserPhoto {
@@ -19,8 +19,8 @@ public class UserPhoto {
 
     @Column(name = "photo_url", nullable = false)
     private String photoUrl;
-    @Column(name = "photo_isProfilePicture", nullable = false)
+    @Column(name = "photo_is_profile_picture", nullable = false)
     private boolean isProfilePicture;
-    @Column(name = "photo_uploadTime", nullable = false)
+    @Column(name = "photo_upload_time", nullable = false)
     private LocalDateTime uploadDate;
 }

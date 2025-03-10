@@ -16,7 +16,7 @@ public class ProfileUtilityService {
     public boolean isProfileExist(User user) {
         return profileRepository.findByUser(user) != null;
     }
-    public void createProfile(UserProfile userProfile) {
+    public void create(UserProfile userProfile) {
         profileRepository.save(userProfile);
     }
 }
