@@ -25,7 +25,8 @@ public class IndexController {
         User user = UserUtilityService.getCurrentUser();
         if (user != null) {
             if (profileService.isProfileExist(user)) {
-                return "dashboard";
+                model.addAttribute("user", user);
+                return "app";
             }
             return "redirect:/profile/init";
         } else {

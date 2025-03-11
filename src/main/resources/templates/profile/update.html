@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Heartbeat | Edit Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="/js/profileUpdate.js"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+<body>
+<div class="container">
+    <div class="row py-5">
+        <div class="col-12 col-lg-8 mx-auto">
+            <div class="card shadow-sm text-dark w-100">
+                <div class="card-header bg-white text-center py-4">
+                    <div class="h5 fw-bold mb-0">
+                        Edit Profile
+                    </div>
+                </div>
+                <div class="card-body p-5 fs-5">
+                    <div class="row">
+                        <div class="col-lg-4 col-6 mb-3 small">
+                            <div class="fw-bold">Name</div>
+                            <div th:text="${user.name}"></div>
+                        </div>
+                        <div class="col-lg-4 col-6 mb-3 small">
+                            <div class="fw-bold">Birthday</div>
+                            <div th:text="${#temporals.format(user.dob, 'dd-MM-yyyy')}"></div>
+                        </div>
+                        <div class="col-lg-4 col-12 mb-3 small">
+                            <div class="fw-bold">Email address</div>
+                            <div th:text="${user.email}"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="small fw-bold mb-2">Photos</div>
+                        <div th:each="photo : ${photos}">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text">URL</span>
+                                <input type="text"
+                                   class="form-control"
+                                   placeholder="Image url here"
+                                   th:value="${photo.photoUrl}">
+                                <button class="btn btn-outline-primary" onclick="openPreview(this)" type="button">Preview</button>
+                                <button class="btn btn-outline-danger" onclick="openPreview(this)" type="button">Remove</button>
+                                <button class="btn btn-outline-success" onclick="uploadImage(this)" type="button">Save</button>
+                            </div>
+                        </div>
+                        <div class="small mb-2 fst-italic">New photo upload</div>
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="input-group-text">URL</span>
+                            <input type="text" class="form-control" placeholder="Image url here" aria-label="Username" aria-describedby="basic-addon1">
+                            <button class="btn btn-outline-primary" onclick="openPreview(this)" type="button">Preview</button>
+                            <button class="btn btn-outline-success" onclick="uploadImage(this)" type="button">Add</button>
+                        </div>
+                    </div>
+                    <form class="row" th:object="${profile}" action="/profile/update" method="POST">
+                        <input type="hidden" th:field="*{id}"/>
+                        <input type="hidden" th:field="*{user}"/>
+                        <div class="col-12 mb-3">
+                            <label class="w-100 small fw-bold">
+                                Bio
+                                <textarea
+                                    type="text"
+                                    class="form-control border-2 mt-2"
+                                    placeholder="Type here..."
+                                    th:value="*{bio}"
+                                    th:field="*{bio}">
+                                </textarea>
+                            </label>
+                        </div>
+                        <div class="col-12 col-lg-4 mb-3">
+                            <label class="w-100 small fw-bold">
+                                Height (cm)
+                                <input
+                                    type="number"
+                                    class="form-control border-2 mt-2"
+                                    placeholder="Type here..."
+                                    th:field="*{height}"
+                                />
+                            </label>
+                        </div>
+                        <div class="col-12 col-lg-4 mb-3">
+                            <label class="w-100 small fw-bold">
+                                School name
+                                <input
+                                        type="text"
+                                        class="form-control border-2 mt-2"
+                                        placeholder="Type here..."
+                                        th:field="*{education}"/>
+                            </label>
+                        </div>
+                        <div class="col-12 col-lg-4 mb-3">
+                            <label class="w-100 small fw-bold">
+                                Occupation
+                                <input
+                                        type="text"
+                                        class="form-control border-2 mt-2"
+                                        placeholder="Type here..."
+                                        th:field="*{occupation}"/>
+                            </label>
+                        </div>
+                        <div class="col-12 mb-5">
+                            <label class="w-100 small fw-bold">
+                                Religion
+                                <select th:field="*{religion}" class="form-select border-2 mt-2">
+                                    <option value="" selected>Select one...</option>
+                                    <option value="atheism">Atheism</option>
+                                    <option value="catholicism">Catholicism</option>
+                                    <option value="buddhism">Buddhism</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn w-100 btn-outline-primary border-3 fw-bold py-2 rounded-5">
+                                Edit profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="imagePreviewModal" aria-hidden="false" aria-labelledby="imagePreviewModal" tabindex="-1">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content bg-white text-dark">
+            <div class="border-0 px-4 pb-0 modal-header">
+                <div class="text-start modal-title h4">
+                    <div class="fw-bold text-success">Image Preview</div>
+                </div>
+                <button
+                        type="button"
+                        class="btn-close btn-close-dark"
+                        aria-label="Close"
+                        role="button"
+                        onclick="$('#imagePreviewModal').modal('hide')">
+                </button>
+            </div>
+            <div class="px-4 modal-body">
+                <img
+                    id="previewImage"
+                    class="w-100 rounded-3 shadow-sm"
+                    src=""
+                    alt="Preview image">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

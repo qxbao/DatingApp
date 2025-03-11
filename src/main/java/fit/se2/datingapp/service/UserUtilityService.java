@@ -49,7 +49,6 @@ public class UserUtilityService implements UserDetailsService {
                 return (User) principal;
             }
         }
-
         return null;
     }
 }
