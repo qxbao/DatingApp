@@ -6,6 +6,8 @@ import fit.se2.datingapp.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class ProfileUtilityService {
     private final ProfileRepository profileRepository;
@@ -18,5 +20,8 @@ public class ProfileUtilityService {
     }
     public void create(UserProfile userProfile) {
         profileRepository.save(userProfile);
+    }
+    public int getAge(LocalDate birthDate) {
+        return LocalDate.now().getYear() - birthDate.getYear();
     }
 }

@@ -2,6 +2,7 @@ package fit.se2.datingapp.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Table(name = "profile")
 @Entity
@@ -12,11 +13,11 @@ public class UserProfile {
     @Column(name = "profile_id", nullable = false)
     private Long id;
 
-    @OneToOne
+    @OneToOne(optional = false)
     private User user;
 
     @Column(name = "profile_height")
-    private Integer height;
+    private String height;
     @Column(name = "profile_occupation")
     private String occupation;
     @Column(name = "profile_education")

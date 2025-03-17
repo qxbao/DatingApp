@@ -1,0 +1,219 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const profileCard = document.getElementById('profile-card');
+    const swipeLeftBtn = document.getElementById('swipe-left');
+    const swipeRightBtn = document.getElementById('swipe-right');
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let isDragging = false;
+    let currentX = 0;
+
+    // Handle button clicks
+    swipeLeftBtn.addEventListener('click', function() {
+        swipeLeft();
+    });
+
+    swipeRightBtn.addEventListener('click', function() {
+        swipeRight();
+    });
+
+    // Touch events for mobile swipe
+    profileCard.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    profileCard.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipeGesture();
+    }, false);
+
+    // Mouse events for desktop drag
+    profileCard.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        touchStartX = e.clientX;
+        profileCard.style.transition = 'none';
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        currentX = e.clientX - touchStartX;
+
+        // Limit the drag
+        if (Math.abs(currentX) > 200) {
+            currentX = currentX > 0 ? 200 : -200;
+        }
+
+        profileCard.style.transform = `translateX(${currentX}px) rotate(${currentX * 0.1}deg)`;
+
+        // Change opacity based on drag distance
+        if (currentX > 0) {
+            // Right swipe - green for like
+            profileCard.style.boxShadow = `0 0 ${Math.abs(currentX) / 10}px rgba(40, 167, 69, ${Math.abs(currentX) / 200})`;
+        } else {
+            // Left swipe - red for dislike
+            profileCard.style.boxShadow = `0 0 ${Math.abs(currentX) / 10}px rgba(220, 53, 69, ${Math.abs(currentX) / 200})`;
+        }
+    });
+
+    document.addEventListener('mouseup', function() {
+        if (!isDragging) return;
+        isDragging = false;
+        touchEndX = currentX + touchStartX;
+        handleSwipeGesture();
+    });
+
+    loadNextProfile();
+
+    function handleSwipeGesture() {
+        const swipeDistance = touchEndX - touchStartX;
+
+        if (swipeDistance > 100) {
+            swipeRight();
+        } else if (swipeDistance < -100) {
+            swipeLeft();
+        } else {
+            resetCard();
+        }
+    }
+
+    function swipeLeft() {
+        profileCard.style.transition = 'transform 0.5s ease';
+        profileCard.style.transform = 'translateX(-1000px) rotate(-30deg)';
+        sendSwipeToServer(false);
+        setTimeout(loadNextProfile, 500);
+    }
+
+    function swipeRight() {
+        profileCard.style.transition = 'transform 0.5s ease';
+        profileCard.style.transform = 'translateX(1000px) rotate(30deg)';
+        sendSwipeToServer(true);
+        setTimeout(loadNextProfile, 500);
+    }
+
+    function resetCard() {
+        profileCard.style.transition = 'transform 0.5s ease';
+        profileCard.style.transform = 'translateX(0) rotate(0)';
+        profileCard.style.boxShadow = 'none';
+    }
+
+    function sendSwipeToServer(isLike) {
+        const profileId = profileCard.dataset.profileId || 1;
+        const profileName = profileCard.querySelector('h3').textContent.split(',')[0] || '';
+
+        fetch('/api/swipe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                targetUserId: profileId,
+                like: isLike
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.match && isLike) {
+                    showMatchNotification(profileName);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    function showNoMoreProfilesMessage() {
+        const container = document.querySelector('.container');
+        container.innerHTML = `
+        <div class="text-center my-5">
+            <h3>No more profiles available</h3>
+            <p>We're finding more matches for you!</p>
+        </div>
+    `;
+    }
+
+    function loadNextProfile() {
+        fetch('/api/next-profile')
+            .then(response => {
+                if (response.status === 204) {
+                    // No more profiles to show
+                    showNoMoreProfilesMessage();
+                    return null;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data) return;
+
+                // Reset card position
+                resetCard();
+
+                // Update card with new profile data
+                const card = document.getElementById('profile-card');
+                const avatar = card.querySelector('.userAvatar');
+                const name = card.querySelector('#name');
+                const age = card.querySelector('#age');
+                const religion = card.querySelector('#religion');
+                const height = card.querySelector('#height');
+                const education = card.querySelector('#education');
+                const occupation = card.querySelector('#occupation');
+                const bio = card.querySelector('#bio');
+
+                // Set profile ID for next swipe action
+                card.dataset.profileId = data.id;
+
+                // Update profile photo
+                if (data.mainPhotoUrl) {
+                    avatar.style.backgroundImage = `url('${data.mainPhotoUrl}')`;
+                } else {
+                    avatar.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg')";
+                }
+
+                // Update name and age
+                name.textContent = data.name;
+                age.textContent = data.age;
+                handleNullableElements(height, data.height, " cm", "badge bg-secondary text-light");
+                handleNullableElements(religion, data.religion, "", "badge bg-success text-light");
+                if (data.occupation) {
+                    occupation.className = "small mb-1";
+                    occupation.innerHTML = `Working at <span class="fw-bold">${data.occupation}</span>`;
+                } else {
+                    occupation.className = "small mb-1 d-none";
+                }
+                if (data.education) {
+                    education.className = "small mb-1";
+                    education.innerHTML = `Studying at <span class="fw-bold">${data.education}</span>`;
+                } else {
+                    education.className = "small mb-1 d-none";
+                }
+                bio.textContent = data.bio || 'They told nothing about themselves.';
+            })
+            .catch(error => {
+                console.error('Error loading next profile:', error);
+            });
+    }
+
+
+    function showMatchNotification() {
+        // Create and display a match notification
+        const matchAlert = document.createElement('div');
+        matchAlert.className = 'match-alert position-fixed top-50 start-50 translate-middle p-4 bg-white rounded-4 shadow-lg text-center';
+        matchAlert.innerHTML = `
+            <h3 class="text-theme mb-3">It's a Match!</h3>
+            <p>You and Sarah liked each other</p>
+            <button class="btn btn-primary">Send Message</button>
+        `;
+        document.body.appendChild(matchAlert);
+
+        setTimeout(() => {
+            matchAlert.remove();
+        }, 3000);
+    }
+
+    function handleNullableElements(element, value, postfix, rootClasses) {
+        if (value) {
+            element.className = rootClasses;
+            element.textContent = value + postfix;
+        } else {
+            element.className = `${rootClasses} d-none`;
+        }
+    }
+});

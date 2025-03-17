@@ -43,8 +43,8 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.stream(this.role.split(AUTHORITIES_DELIMITER))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
     }
 
     @Override
