@@ -122,6 +122,7 @@ public class MatchingController {
             return ResponseEntity.ok(ActiveConversationDTO.builder()
                     .len(matchIds.size())
                     .names(names)
+                    .ids(matchIds)
                     .avatarUrls(avatarUrls)
                     .lastMessages(lastMsgs)
                     .build());

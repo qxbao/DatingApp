@@ -74,4 +74,7 @@ public class MatchingService {
     public List<UserMatch> getMatches(User user) {
         return matchRepository.findByUser1OrUser2(user, user);
     }
+    public boolean isAMatchBetween(User a, User b) {
+        return matchRepository.findByUser1AndUser2(a, b).isPresent() || matchRepository.findByUser1AndUser2(b, a).isPresent();
+    }
 }

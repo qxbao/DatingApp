@@ -8,13 +8,35 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Heartbeat | Find your perfect half</title>
+    <link rel="stylesheet" href="/css/chat.css">
 </head>
 <body>
 <div layout:fragment="content">
     <div class="container">
         <div class="row justify-content-center h-100">
-            <div class="col-12 col-md-9 d-flex" th:text="${uid}">
-
+            <div class="col-12 col-md-9 col-lg-7 d-flex align-items-center justify-content-center">
+                <div class="card chatBox border-0 rounded-3 overflow-hidden shadow">
+                    <div class="card-header bg-white p-3 d-flex align-items-center">
+                        <div th:style="'background-image: url(' + ${targetAvatar} + ')'" class="chatAvatar rounded-circle me-3" style="width:50px" alt="">
+                        </div>
+                        <div>
+                            <div class="fs-5 fw-semibold" th:text="${targetUser.name}"></div>
+                            <div class="small text-secondary">Click to see their profile</div>
+                        </div>
+                    </div>
+                    <div class="card-body overflow-y-scroll"></div>
+                    <div class="card-footer p-3 bg-white">
+                        <div class="input-group">
+                            <textarea
+                                class="form-control"
+                                placeholder="Message..."
+                                style="height: 1px !important;"></textarea>
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="bi bi-send me-1"></i>Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

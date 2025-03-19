@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             for (let i = 0; i < data.len; i++) {
-                const chatItem = createChatItem(data.avatarUrls[i], data.names[i], data.lastMessages[i]);
+                const chatItem = createChatItem(data.avatarUrls[i], data.names[i], data.lastMessages[i],  data.ids[i]);
                 container.appendChild(chatItem);
             }
         })
@@ -18,11 +18,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 });
 
-const createChatItem = (avatar, name, lastMessage) => {
+const createChatItem = (avatar, name, lastMessage, id) => {
     const chatItem = document.createElement('div');
     chatItem.setAttribute('role', 'button');
     chatItem.className = 'chatField px-3 py-3 d-flex rounded-3 align-items-center';
-
+    chatItem.role = "button";
+    chatItem.addEventListener("click", () =>  {
+        location.href = `/chat/${id}`;
+    })
     const avatarDiv = document.createElement('div');
     avatarDiv.className = 'rounded-circle chatAvatar me-2';
     avatarDiv.style.backgroundImage = `url('${avatar}')`;

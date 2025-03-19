@@ -10,6 +10,7 @@ import java.util.List;
 public class ActiveConversationDTO {
     private int len;
     private List<String> names;
+    private List<Long> ids;
     private List<String> avatarUrls;
     private List<String> lastMessages;
 }
