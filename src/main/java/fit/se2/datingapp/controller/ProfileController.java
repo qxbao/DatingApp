@@ -1,10 +1,12 @@
 package fit.se2.datingapp.controller;
 
 import fit.se2.datingapp.dto.AddPhotoDTO;
+import fit.se2.datingapp.dto.RemovePhotoDTO;
 import fit.se2.datingapp.model.User;
 import fit.se2.datingapp.model.UserPhoto;
 import fit.se2.datingapp.model.UserProfile;
 import fit.se2.datingapp.repository.ProfileRepository;
+import fit.se2.datingapp.service.MatchingService;
 import fit.se2.datingapp.service.ProfileUtilityService;
 import fit.se2.datingapp.service.UserPhotoUtilityService;
 import fit.se2.datingapp.service.UserUtilityService;
@@ -24,12 +26,21 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/profile/")
 public class ProfileController {
+    private final ProfileUtilityService profileService;
+    private final ProfileRepository profileRepository;
+    private final UserPhotoUtilityService userPhotoUtilityService;
+    private final MatchingService matchingService;
     @Autowired
-    private ProfileUtilityService profileService;
-    @Autowired
-    private ProfileRepository profileRepository;
-    @Autowired
-    private UserPhotoUtilityService userPhotoUtilityService;
+    public ProfileController(
+            ProfileUtilityService profileService,
+            ProfileRepository profileRepository,
+            UserPhotoUtilityService userPhotoUtilityService,
+            MatchingService matchingService) {
+        this.profileService = profileService;
+        this.profileRepository = profileRepository;
+        this.userPhotoUtilityService = userPhotoUtilityService;
+        this.matchingService = matchingService;
+    }
 
     @GetMapping(value = "/init")
     public String createProfilePage(Model model) {
@@ -49,7 +60,6 @@ public class ProfileController {
             UserProfile profile = profileRepository.findByUser(user);
             List<UserPhoto> photos = userPhotoUtilityService.getUserPhotos(user);
             model.addAttribute("photos", photos);
-            model.addAttribute("user", user);
             model.addAttribute("profile", profile);
             return "profile/update";
         }
@@ -78,6 +88,11 @@ public class ProfileController {
                 .user(UserUtilityService.getCurrentUser())
                 .build();
         userPhotoUtilityService.create(photo);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+    @PostMapping(value = "/photo/remove")
+    public ResponseEntity<HttpStatus> removePhoto(@RequestBody RemovePhotoDTO removePhotoDTO) {
+        userPhotoUtilityService.removePhotoById(removePhotoDTO.getId());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 }

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 :root {
     --bgColor: linear-gradient(45deg, #ea3660, #d54d09) !important;
@@ -11,7 +12,7 @@
 }
 
 body {
-    font-family: "Lato", serif;
+    font-family: "Inter", sans-serif;
     background: var(--bgColor);
     color: var(--textColor);
     transition: .3s all;
@@ -36,4 +37,18 @@ body {
 
 .border-theme {
     border-color: var(--themeColor);
+}
+
+.chatField:hover {
+    transition: background-color 0.3s ease;
+    background-color: #e3e3e3;
+}
+
+.chatAvatar {
+    height: 100%;
+    aspect-ratio : 1 / 1;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: local;
 }

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="_layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Heartbeat | Find your perfect half</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="row justify-content-center h-100">
+            <div class="col-12 col-md-9 d-flex" th:text="${uid}">
+
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

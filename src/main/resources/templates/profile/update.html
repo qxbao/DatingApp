@@ -45,9 +45,9 @@
                                        class="form-control"
                                        placeholder="Image url here"
                                        th:value="${photo.photoUrl}">
-                                    <button class="btn btn-outline-primary" onclick="openPreview(this)" type="button">Preview</button>
-                                    <button class="btn btn-outline-danger" onclick="openPreview(this)" type="button">Remove</button>
-                                    <button class="btn btn-outline-success" onclick="uploadImage(this)" type="button">Save</button>
+                                    <button class="btn btn-outline-primary" th:onclick="'openPreview(this,'+ ${photo.id}+')'" type="button">Preview</button>
+                                    <button class="btn btn-outline-danger" th:onclick="'removeImage('+ ${photo.id}+')'" type="button">Remove</button>
+                                    <button class="btn btn-outline-success" onclick="updateImage(this)" type="button">Save</button>
                                 </div>
                             </div>
                             <div class="small mb-2 fst-italic">New photo upload</div>

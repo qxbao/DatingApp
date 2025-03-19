@@ -17,7 +17,7 @@ public class UserPhoto {
     @ManyToOne
     private User user;
 
-    @Column(name = "photo_url", nullable = false)
+    @Column(name = "photo_url", nullable = false, length = 1000)
     private String photoUrl;
     @Column(name = "photo_is_profile_picture", nullable = false)
     private boolean isProfilePicture;

@@ -42,29 +42,21 @@ public class MatchingService {
                     .build();
 
             likeRepository.save(like);
-
-            // Check if the other user also liked this user
             Optional<UserLike> reverseLike = likeRepository.findByLikerAndLiked(liked, liker);
-
             if (reverseLike.isPresent()) {
-                // It's a match! Create a match record
                 UserMatch match = UserMatch.builder()
                         .user1(liker)
                         .user2(liked)
                         .matchDate(LocalDateTime.now())
                         .build();
-
                 matchRepository.save(match);
                 return true;
             }
         }
-        // No need to save dislike records
-
         return false;
     }
 
     public UserProfile findNextProfileForUser(User user) {
-        // Get user ids that current user has already liked
         List<Long> likedUserIds = likeRepository.findLikedUserIdsByUserId(user.getId());
         String preference = user.getPreference();
         List<String> preferences;
@@ -73,7 +65,13 @@ public class MatchingService {
         } else {
             preferences = List.of(preference);
         }
-        // Get a potential match based on preferences and filters
         return profileRepository.findNextProfileForUser(user.getId(), likedUserIds, preferences, user.getGender());
+    }
+    public int getNumberOfALikeB(User b) {
+        return (likeRepository.findUserLikesByLiked(b)).size();
+    }
+
+    public List<UserMatch> getMatches(User user) {
+        return matchRepository.findByUser1OrUser2(user, user);
     }
 }

@@ -13,22 +13,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/common.js}"></script>
 </head>
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-3 vh-100 bg-white px-0 text-black d-flex flex-column px-1">
+        <div class="col-3 vh-100 bg-white px-0 text-black flex-column px-1 d-none d-md-flex">
             <div class="dropend">
                 <button
                         class="px-3 py-3 d-block d-flex align-items-center bg-transparent justify-content-start w-100 border-0 dropdown-toggle"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                 >
-                    <img src="/image/user.png"
-                         width="40"
-                         class="rounded-circle border-3 border border-black me-2"
+                    <div th:style="'background-image:url('+ ${avatar}+'); width: 40px;'"
+                         class="rounded-circle chatAvatar me-2"
                          alt="User image">
-                    <span class="small fw-bold" th:text="${user.name}"></span>
+                    </div>
+                    <span class="fw-bold" th:text="${user.name}"></span>
                 </button>
                 <ul class="dropdown-menu mx-auto">
                     <li><a class="dropdown-item" href="/profile/update">Edit profile</a></li>
@@ -37,14 +38,24 @@
                 </ul>
             </div>
             <div class="px-3 mb-3">
-                <div class="small">Match queue</div>
-                <div class="fst-italic">Nobody liked you, yet</div>
+                <div class="small mb-2">Likes you</div>
+                <div th:text="${likerNo == 0} ? 'Nobody liked you, yet.' : ${likerNo} + ' users liked you'">Nobody liked you, yet</div>
             </div>
-            <div class="overflow-y-scroll d-flex flex-grow-1">
-                <div class="px-3">
+            <div class="overflow-y-scroll d-flex flex-grow-1 flex-column">
+                <div class="px-3 mb-2">
                     <div class="small">Conversations <span class="text-secondary">(Recent)</span></div>
-                    <div>You have no active conversation</div>
                 </div>
+                <div id="chatContainer">
+
+                </div>
+<!--                <div role="button" class="chatField px-3 py-3 d-flex rounded-3" th:if="${#lists.size(match_users) > 0}" th:each="user, iter: ${match_users}">-->
+<!--                    <div class="rounded-circle chatAvatar me-2" th:style="'background-image: url(' + ${match_photos.get(iter.index).photoUrl} + ');'">-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <div class="fw-bold" th:text="${user.name}"></div>-->
+<!--                        <div class="text-secondary small">Click to enter the chat</div>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         </div>
         <div class="col d-flex flex-column vh-100">

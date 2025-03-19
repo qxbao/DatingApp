@@ -23,3 +23,16 @@ function uploadImage(e) {
         },
     });
 }
+
+function removeImage(id) {
+    $.ajax({
+        type: "POST",
+        url:  "/profile/photo/remove",
+        data: JSON.stringify({ id : id}),
+        contentType: "application/json",
+        complete: function (data) {
+            alert("Photo removed!!!");
+            location.reload();
+        },
+    });
+}
