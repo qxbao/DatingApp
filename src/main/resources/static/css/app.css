@@ -4,10 +4,12 @@
     background-size: cover;
     background-attachment: local;
 }
+
 .card {
     min-height:80%;
-    background: #e8dfc4;
+    background: #e8e3d4;
 }
+
 .swipe-buttons-container {
     position: absolute;
     width: 100%;

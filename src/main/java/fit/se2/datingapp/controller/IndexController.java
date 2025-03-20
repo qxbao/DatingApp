@@ -2,8 +2,8 @@ package fit.se2.datingapp.controller;
 
 import fit.se2.datingapp.model.User;
 import fit.se2.datingapp.repository.UserRepository;
-import fit.se2.datingapp.service.ProfileUtilityService;
-import fit.se2.datingapp.service.UserUtilityService;
+import fit.se2.datingapp.service.ProfileService;
+import fit.se2.datingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class IndexController {
     private final UserRepository userRepository;
-    private final UserUtilityService userService;
-    private final ProfileUtilityService profileService;
+    private final UserService userService;
+    private final ProfileService profileService;
     @Autowired
-    public IndexController(UserRepository userRepository, UserUtilityService userService, ProfileUtilityService profileService) {
+    public IndexController(UserRepository userRepository, UserService userService, ProfileService profileService) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.profileService = profileService;
     }
     @GetMapping("/")
     public String index(Model model) {
-        User user = UserUtilityService.getCurrentUser();
+        User user = UserService.getCurrentUser();
         if (user != null) {
             if (profileService.isProfileExist(user)) {
                 return "app";

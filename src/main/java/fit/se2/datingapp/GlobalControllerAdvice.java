@@ -4,7 +4,7 @@ import fit.se2.datingapp.constants.Const;
 import fit.se2.datingapp.repository.*;
 import fit.se2.datingapp.model.*;
 import fit.se2.datingapp.service.MatchingService;
-import fit.se2.datingapp.service.UserPhotoUtilityService;
+import fit.se2.datingapp.service.UserPhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +25,7 @@ public class GlobalControllerAdvice {
     private MatchingService matchingService;
 
     @Autowired
-    private UserPhotoUtilityService userPhotoUtilityService;
+    private UserPhotoService userPhotoService;
 
     @ModelAttribute("user")
     public User getCurrentUser() {
@@ -47,7 +47,7 @@ public class GlobalControllerAdvice {
     @ModelAttribute("avatar")
     public String getAvatarUrl(@ModelAttribute("user") User user) {
         if (user != null) {
-            UserPhoto userPhoto = userPhotoUtilityService.getUserAvatar(user);
+            UserPhoto userPhoto = userPhotoService.getUserAvatar(user);
             return userPhoto != null ? userPhoto.getPhotoUrl() : Const.DEFAULT_AVATAR_URL;
         }
         return null;
@@ -79,7 +79,7 @@ public class GlobalControllerAdvice {
                     .map(match -> Objects.equals(match.getUser1().getId(), user.getId()) ? match.getUser2() : match.getUser1())
                     .toList();
             return matchedUsers.stream()
-                    .map(u -> userPhotoUtilityService.getUserPhotos(u))
+                    .map(u -> userPhotoService.getUserPhotos(u))
                     .flatMap(List::stream)
                     .toList();
         }

@@ -2,13 +2,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const profileCard = document.getElementById('profile-card');
     const swipeLeftBtn = document.getElementById('swipe-left');
     const swipeRightBtn = document.getElementById('swipe-right');
-
     let touchStartX = 0;
     let touchEndX = 0;
     let isDragging = false;
     let currentX = 0;
 
-    // Handle button clicks
     swipeLeftBtn.addEventListener('click', function() {
         swipeLeft();
     });
@@ -17,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
         swipeRight();
     });
 
-    // Touch events for mobile swipe
     profileCard.addEventListener('touchstart', function(e) {
         touchStartX = e.changedTouches[0].screenX;
     }, false);
@@ -27,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
         handleSwipeGesture();
     }, false);
 
-    // Mouse events for desktop drag
     profileCard.addEventListener('mousedown', function(e) {
         isDragging = true;
         touchStartX = e.clientX;
@@ -98,8 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function sendSwipeToServer(isLike) {
         const profileId = profileCard.dataset.profileId || 1;
-        const profileName = profileCard.querySelector('h3').textContent.split(',')[0] || '';
-
         fetch('/api/swipe', {
             method: 'POST',
             headers: {
@@ -113,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.match && isLike) {
-                    showMatchNotification(profileName);
+                    showMatchNotification(profileId);
                 }
             })
             .catch(error => {
@@ -123,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showNoMoreProfilesMessage() {
         const container = document.querySelector('.container');
         container.innerHTML = `
-        <div class="text-center my-5">
+        <div class="text-center h-100 d-flex flex-column justify-content-center align-items-center">
             <h3>No more profiles available</h3>
             <p>We're finding more matches for you!</p>
         </div>
@@ -134,7 +128,6 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/api/next-profile')
             .then(response => {
                 if (response.status === 204) {
-                    // No more profiles to show
                     showNoMoreProfilesMessage();
                     return null;
                 }
@@ -142,10 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(data => {
                 if (!data) return;
-
-                // Reset card position
                 resetCard();
-
                 // Update card with new profile data
                 const card = document.getElementById('profile-card');
                 const avatar = card.querySelector('.userAvatar');
@@ -161,13 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.dataset.profileId = data.id;
 
                 // Update profile photo
-                if (data.mainPhotoUrl) {
-                    avatar.style.backgroundImage = `url('${data.mainPhotoUrl}')`;
-                } else {
-                    avatar.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg')";
-                }
-
-                // Update name and age
+                avatar.style.backgroundImage = `url('${data.mainPhotoUrl}')`;
                 name.textContent = data.name;
                 age.textContent = data.age;
                 handleNullableElements(height, data.height, " cm", "badge bg-secondary text-light");
@@ -184,28 +168,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     education.className = "small mb-1 d-none";
                 }
-                bio.textContent = data.bio || 'They told nothing about themselves.';
+                bio.textContent = data.bio || 'No bio';
             })
             .catch(error => {
                 console.error('Error loading next profile:', error);
             });
     }
 
+    function showMatchNotification(profileId) {
+        document.querySelector("#goToChatButton").href = "/chat/" + profileId;
+        $("#matchModalToggle").modal("show");
 
-    function showMatchNotification() {
-        // Create and display a match notification
-        const matchAlert = document.createElement('div');
-        matchAlert.className = 'match-alert position-fixed top-50 start-50 translate-middle p-4 bg-white rounded-4 shadow-lg text-center';
-        matchAlert.innerHTML = `
-            <h3 class="text-theme mb-3">It's a Match!</h3>
-            <p>You and Sarah liked each other</p>
-            <button class="btn btn-primary">Send Message</button>
-        `;
-        document.body.appendChild(matchAlert);
-
-        setTimeout(() => {
-            matchAlert.remove();
-        }, 3000);
     }
 
     function handleNullableElements(element, value, postfix, rootClasses) {

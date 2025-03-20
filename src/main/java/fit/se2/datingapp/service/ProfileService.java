@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 @Service
-public class ProfileUtilityService {
+public class ProfileService {
     private final ProfileRepository profileRepository;
     @Autowired
-    public ProfileUtilityService(ProfileRepository profileRepository) {
+    public ProfileService(ProfileRepository profileRepository) {
         this.profileRepository = profileRepository;
     }
     public boolean isProfileExist(User user) {
@@ -22,6 +22,11 @@ public class ProfileUtilityService {
         profileRepository.save(userProfile);
     }
     public int getAge(LocalDate birthDate) {
-        return LocalDate.now().getYear() - birthDate.getYear();
+        LocalDate today = LocalDate.now();
+        int age = today.getYear() - birthDate.getYear();
+        if (today.getDayOfYear() < birthDate.getDayOfYear()) {
+            age--;
+        }
+        return age;
     }
 }

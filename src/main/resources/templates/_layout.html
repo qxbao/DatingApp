@@ -38,19 +38,25 @@
                 </ul>
             </div>
             <div class="px-3 mb-3">
-                <div class="small mb-2">Likes you</div>
+                <div class="small mb-2">
+                    <i class="bi bi-heart-fill text-danger"></i>
+                    Likes you
+                </div>
                 <div th:text="${likerNo == 0} ? 'Nobody liked you, yet.' : ${likerNo} + ' users liked you'">Nobody liked you, yet</div>
             </div>
             <div class="overflow-y-scroll d-flex flex-grow-1 flex-column">
                 <div class="px-3 mb-2">
-                    <div class="small">Conversations <span class="text-secondary">(Recent)</span></div>
+                    <div class="small">
+                        <i class="bi bi-chat-dots-fill text-theme"></i>
+                        Conversations <span class="text-secondary">(Recent)</span>
+                    </div>
                 </div>
                 <div id="chatUserContainer">
 
                 </div>
             </div>
         </div>
-        <div class="col d-flex flex-column vh-100">
+        <div class="col d-flex flex-column vh-100 overflow-hidden">
             <a href="/" class="d-block text-decoration-none h3 py-3 text-center fw-black text-light">Heartbeat</a>
             <div class="overflow-y-scroll d-flex flex-grow-1 overflow-x-hidden" layout:fragment="content">
 

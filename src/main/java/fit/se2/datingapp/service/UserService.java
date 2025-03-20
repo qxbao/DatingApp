@@ -12,10 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserUtilityService implements UserDetailsService {
+public class UserService implements UserDetailsService {
     UserRepository userRepository;
     @Autowired
-    public UserUtilityService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
     @Override
@@ -58,5 +58,10 @@ public class UserUtilityService implements UserDetailsService {
             }
         }
         return null;
+    }
+
+    public boolean isEmailExist(String email) {
+        User user = userRepository.findByEmail(email);
+        return user != null;
     }
 }

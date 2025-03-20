@@ -1,7 +1,7 @@
 package fit.se2.datingapp.websocket;
 
 import fit.se2.datingapp.service.MatchingService;
-import fit.se2.datingapp.service.UserUtilityService;
+import fit.se2.datingapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -19,7 +19,7 @@ import java.util.Objects;
 public class WebSocketEventListener {
     private final SimpMessageSendingOperations messageOperations;
     private final MatchingService matchingService;
-    private final UserUtilityService userUtilityService;
+    private final UserService userService;
 
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
@@ -27,7 +27,7 @@ public class WebSocketEventListener {
         Long uid = (Long) accessor.getSessionAttributes().get("uid");
         if  (uid != null) {
             log.info("User Disconnected: {} ", uid);
-            List<String> matchedUsers = matchingService.getMatches(userUtilityService.getUserById(uid)).stream().map(
+            List<String> matchedUsers = matchingService.getMatches(userService.getUserById(uid)).stream().map(
                 match -> Objects.equals(match.getUser1().getId(), uid) ? match.getUser2().getEmail() : match.getUser1().getEmail()
             ).toList();
             SocketMessage socketMessage = SocketMessage.builder()

@@ -51,7 +51,31 @@
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="modal fade" id="matchModalToggle" aria-hidden="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-white text-dark shadow">
+                <div class="border-0 px-4 pt-4 pb-0 modal-header">
+                    <button
+                            type="button"
+                            class="btn-close btn-close-dark"
+                            aria-label="Close"
+                            role="button"
+                            onclick="$('#matchModalToggle').modal('hide')">
+                    </button>
+                </div>
+                <div class="px-4 modal-body d-flex p-5 align-items-center justify-content-center flex-column text-center">
+                    <i class="bi bi-emoji-heart-eyes mb-1 text-success display-3"></i>
+                    <span class="fw-semibold fs-4 mb-2 text-success-emphasis">
+                        You just got a match!
+                    </span>
+                    <p class="text-secondary mb-3" id="errorDetail">Now, do your best to take their heart.</p>
+                    <a href="#" class="button text-decoration-none px-5" id="goToChatButton">
+                        Go to chat
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

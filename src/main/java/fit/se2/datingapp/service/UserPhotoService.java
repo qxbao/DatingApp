@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserPhotoUtilityService {
+public class UserPhotoService {
     UserPhotoRepository userPhotoRepository;
     @Autowired
-    public UserPhotoUtilityService(UserPhotoRepository userPhotoRepository) {
+    public UserPhotoService(UserPhotoRepository userPhotoRepository) {
         this.userPhotoRepository = userPhotoRepository;
     }
     public List<UserPhoto> getUserPhotos(User user) {

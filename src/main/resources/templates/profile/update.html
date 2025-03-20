@@ -15,7 +15,7 @@
     <div class="container-fluid">
         <div class="row py-5">
             <div class="col-12 col-lg-8 mx-auto">
-                <div class="card shadow-sm text-dark w-100">
+                <div class="card border-0 shadow-sm text-dark w-100">
                     <div class="card-header bg-white text-center py-4">
                         <div class="h5 fw-bold mb-0">
                             Edit Profile
@@ -38,6 +38,12 @@
                         </div>
                         <div>
                             <div class="small fw-bold mb-2">Photos</div>
+                            <div th:if="${#lists.size(photos) == 0}">
+                                <div class="small text-secondary mb-2">
+                                    <i class="bi bi-exclamation-circle"></i>
+                                    No photo uploaded.
+                                </div>
+                            </div>
                             <div th:each="photo : ${photos}">
                                 <div class="input-group input-group-sm mb-3">
                                     <span class="input-group-text">URL</span>
@@ -50,7 +56,7 @@
                                     <button class="btn btn-outline-success" onclick="updateImage(this)" type="button">Save</button>
                                 </div>
                             </div>
-                            <div class="small mb-2 fst-italic">New photo upload</div>
+                            <div class="small mb-2 fw-bold">New photo upload</div>
                             <div class="input-group input-group-sm mb-3">
                                 <span class="input-group-text">URL</span>
                                 <input type="text" class="form-control" placeholder="Image url here" aria-label="Username" aria-describedby="basic-addon1">
@@ -115,9 +121,9 @@
                                     </select>
                                 </label>
                             </div>
-                            <div class="col-12">
-                                <button class="btn w-100 btn-outline-primary border-3 fw-bold py-2 rounded-5">
-                                    Edit profile
+                            <div class="col-12 d-flex">
+                                <button class="button mx-auto border-3 fw-bold py-3 px-5 rounded-5">
+                                    Save profile changes
                                 </button>
                             </div>
                         </form>

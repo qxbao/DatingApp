@@ -2,6 +2,12 @@ let stompClient = null;
 document.addEventListener('DOMContentLoaded', function() {
     connectWs();
     loadMessage(0, 10);
+    $("#messageInput").on('keydown', function(e) {
+        if(e.keyCode === 13 && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
 })
 
 const connectWs = () => {
@@ -21,15 +27,17 @@ const connectWs = () => {
 }
 
 const sendMessage = () => {
-    const messageContent = document.getElementById('messageInput').value;
+    const messageContent = document.getElementById('messageInput').textContent;
     if (messageContent) {
         $.ajax({
             type: "POST",
             url:  "/chat/sendMessage",
             data: JSON.stringify({ senderId : uid, receiverId: tuid, content: messageContent }),
             contentType: "application/json",
-            complete: function (data) {
-                document.getElementById('messageInput').value = '';
+            complete: function () {
+                document.getElementById('messageInput').textContent = '';
+                const chatContainer = document.getElementById('chatContainer');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             },
         });
     }
@@ -42,11 +50,25 @@ const loadMessage = (from, to) => {
         data: { receiverId: tuid, fromIndex: from, toIndex: to },
         contentType: "application/json",
     }).done(function (data) {
-        console.log(data)
+        let h = 0;
         for (let i = 0; i < data.messages.length; i++) {
             const msgEl = createMessageElement(data.messages[i], data.senders[i]);
             document.getElementById('chatContainer').prepend(msgEl);
+            h += msgEl.offsetHeight;
         }
+        if (!data.overflow) {
+            const loadMoreEl = document.createElement('div');
+            loadMoreEl.className = 'text-decoration-underline text-center mb-2 text-primary';
+            loadMoreEl.textContent = 'Load older messages';
+            loadMoreEl.style.cursor = 'pointer';
+            loadMoreEl.onclick = function() {
+                loadMessage(to, to + 10);
+                loadMoreEl.remove();
+            }
+            document.getElementById('chatContainer').prepend(loadMoreEl)
+            h += loadMoreEl.offsetHeight;
+        }
+        document.getElementById('chatContainer').scrollTop = h;
     });
 }
 

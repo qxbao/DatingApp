@@ -10,8 +10,8 @@ import fit.se2.datingapp.model.UserPhoto;
 import fit.se2.datingapp.repository.MessageRepository;
 import fit.se2.datingapp.service.MatchingService;
 import fit.se2.datingapp.service.MessageService;
-import fit.se2.datingapp.service.UserPhotoUtilityService;
-import fit.se2.datingapp.service.UserUtilityService;
+import fit.se2.datingapp.service.UserPhotoService;
+import fit.se2.datingapp.service.UserService;
 import fit.se2.datingapp.websocket.SocketMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,17 +33,17 @@ import java.util.Objects;
 public class ChatController {
 
     private final MatchingService matchingService;
-    private final UserUtilityService userUtilityService;
-    private final UserPhotoUtilityService userPhotoUtilityService;
+    private final UserService userService;
+    private final UserPhotoService userPhotoService;
     private final SimpMessagingTemplate template;
     private final MessageService messageService;
     private final MessageRepository messageRepository;
 
     @Autowired
-    public ChatController(MatchingService matchingService, UserUtilityService userUtilityService, UserPhotoUtilityService userPhotoUtilityService, SimpMessagingTemplate template, MessageService messageService, MessageRepository messageRepository) {
+    public ChatController(MatchingService matchingService, UserService userService, UserPhotoService userPhotoService, SimpMessagingTemplate template, MessageService messageService, MessageRepository messageRepository) {
         this.matchingService = matchingService;
-        this.userUtilityService = userUtilityService;
-        this.userPhotoUtilityService = userPhotoUtilityService;
+        this.userService = userService;
+        this.userPhotoService = userPhotoService;
         this.template = template;
         this.messageService = messageService;
         this.messageRepository = messageRepository;
@@ -55,7 +55,7 @@ public class ChatController {
             @RequestBody SendMessageDTO sendMessageDTO,
             @ModelAttribute("user") User user
     ) {
-        User receiver = userUtilityService.getUserById(sendMessageDTO.getReceiverId());
+        User receiver = userService.getUserById(sendMessageDTO.getReceiverId());
         if (Objects.equals(
                 sendMessageDTO.getSenderId(), null) ||
                 receiver == null ||
@@ -73,7 +73,7 @@ public class ChatController {
                             .content(sendMessageDTO.getContent())
                         .build());
         List<Long> matchedUsers = List.of(sendMessageDTO.getSenderId(), sendMessageDTO.getReceiverId());
-        for (String email : matchedUsers.stream().map(userUtilityService::getUserById).map(User::getEmail).toList()) {
+        for (String email : matchedUsers.stream().map(userService::getUserById).map(User::getEmail).toList()) {
             template.convertAndSendToUser(
                     email,
                     "/queue/chat",
@@ -99,7 +99,7 @@ public class ChatController {
             @RequestParam  Long receiverId,
             @ModelAttribute("user") User user
             ) {
-        User receiver = userUtilityService.getUserById(receiverId);
+        User receiver = userService.getUserById(receiverId);
         if (receiver == null ||
                 user == null ||
                 !matchingService.isAMatchBetween(user, receiver)){
@@ -122,7 +122,7 @@ public class ChatController {
         List<Long> matchedUsers = List.of(socketMessage.getSender(), socketMessage.getReceiver());
         for (Long userId : matchedUsers) {
             template.convertAndSendToUser(
-                userUtilityService.getUserById(userId).getEmail(),
+                userService.getUserById(userId).getEmail(),
                 "/queue/chat",
                     socketMessage
             );
@@ -131,12 +131,12 @@ public class ChatController {
     }
     @GetMapping(value ="/{uid}")
     public String getChatPage(@PathVariable String uid, Model model) {
-        User user = UserUtilityService.getCurrentUser();
+        User user = UserService.getCurrentUser();
         if (user == null) return "redirect:/login";
-        User targetUser = userUtilityService.getUserById(Long.parseLong(uid));
+        User targetUser = userService.getUserById(Long.parseLong(uid));
         if (matchingService.isAMatchBetween(
                 user, targetUser)) {
-            UserPhoto targetAvatar = userPhotoUtilityService.getUserAvatar(targetUser);
+            UserPhoto targetAvatar = userPhotoService.getUserAvatar(targetUser);
             model.addAttribute("uid", uid);
             model.addAttribute("targetUser", targetUser);
             model.addAttribute("targetAvatar", targetAvatar == null ? Const.DEFAULT_AVATAR_URL : targetAvatar.getPhotoUrl());

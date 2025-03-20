@@ -2,12 +2,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 :root {
-    --bgColor: linear-gradient(45deg, #ea3660, #d54d09) !important;
+    --bgColor: linear-gradient(45deg, #2f3fe7 25%, 50%, #2a8d81) !important;
     --textColor: #ffffff;
     --lightTextColor: #747474;
     --cardBgColor: white;
     --inputColor: #ababab;
-    --themeColor: #dc391c;
+    --themeColor: #2f3fe7;
     font-weight: 400;
 }
 
@@ -51,4 +51,24 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: local;
+}
+
+.button {
+    background: var(--themeColor);
+    color: var(--textColor);
+    border-radius: 100px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    filter: brightness(0.9);
+}
+
+.button:active {
+    transform: scale(0.95);
 }

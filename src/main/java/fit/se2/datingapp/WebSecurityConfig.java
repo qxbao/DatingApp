@@ -1,6 +1,6 @@
 package fit.se2.datingapp;
 
-import fit.se2.datingapp.service.UserUtilityService;
+import fit.se2.datingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class WebSecurityConfig {
     @Autowired
-    private UserUtilityService userService;
+    private UserService userService;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

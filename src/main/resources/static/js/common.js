@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const container = document.getElementById('chatUserContainer');
             container.innerHTML = '';
             if (data.len === 0) {
-                container.innerHTML = '<p>No active conversations</p>';
+                container.innerHTML = '<p class="px-3">No active conversations</p>';
                 return;
             }
             for (let i = 0; i < data.len; i++) {

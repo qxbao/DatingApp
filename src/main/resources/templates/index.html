@@ -8,11 +8,12 @@
     <title>Heartbeat | Find your perfect half</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script th:src="@{/js/login.js}"></script>
+    <script th:src="@{/js/index.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
 </head>
 <body>
     <div class="container">
@@ -25,20 +26,19 @@
             </div>
             <div class="d-flex flex-column" style="width: 30vw; min-width: 300px">
                 <form th:action="@{/user/login}" method="POST" class="d-flex flex-column">
-
-                    <div class="form-floating mb-3">
-                        <input name="username" class="form-control text-theme border-3 rounded-3 shadow" id="floatingEmail"
+                    <div class="form-floating mb-4">
+                        <input name="username" class="form-control bg-light text-theme border-0 rounded-3 shadow" id="floatingEmail"
                                placeholder="name@example.com">
                         <label class="text-secondary" for="floatingEmail">Email address</label>
                     </div>
                     <div class="form-floating mb-5">
-                        <input name="password" class="form-control text-theme border-3 rounded-3 shadow" type="password" id="floatingPassword"
+                        <input name="password" class="form-control bg-light text-theme border-0 rounded-3 shadow" type="password" id="floatingPassword"
                                placeholder="Password">
                         <label class="text-secondary" for="floatingPassword">Password</label>
                     </div>
-                    <button class='btn btn-dark fw-black fs-5 p-3 border-0 rounded-5'>SIGN IN</button>
+                    <button class='btn btn-dark fw-bold p-3 w-75 mx-auto border-0 rounded-5'>SIGN IN</button>
                 </form>
-                <div class='text-center mt-3 text-light'>
+                <div class='text-center mt-3 text-light small'>
                     Don't have an account? <a class='text-light' href="#" data-bs-target="#registrationModalToggle"
                                               data-bs-toggle="modal">Create one now</a>
                 </div>
@@ -47,38 +47,38 @@
     </div>
     <div class="modal fade" id="registrationModalToggle" aria-hidden="true" aria-labelledby="registrationModalToggle"
          tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-white text-dark">
                 <div class="border-0 px-4 modal-header">
-                    <div class="text-start modal-title h4">
-                        <div class="fw-bold">Create an account</div>
+                    <div class="text-start">
+                        <div class="fw-bold h3 text-theme">Create an account</div>
                     </div>
                     <button type="button" class="btn-close btn-close-dark" aria-label="Close"></button>
                 </div>
-                <div class="px-4 modal-body">
-                    <form th:action="@{/user/register}" th:object="${new_user}" method="POST">
+                <div class="px-4 pt-0 modal-body">
+                    <form th:action="@{/user/register}" id="registerForm" method="POST">
                         <div class="row">
                             <div class="mb-3 col-lg-6 col-12">
-                                <label class="mb-1 ms-2">Full name</label>
+                                <label class="ms-2 fw-semibold text-secondary">Full name</label>
                                 <input placeholder="Type here..." class="border-3 rounded-3 form-control" type="text"
-                                       value="" th:field="*{name}">
+                                       value="" name="reg_name">
                             </div>
                             <div class="mb-3 col-lg-6 col-12">
-                                <label class="mb-1 ms-2">Email</label>
-                                <input placeholder="Type here..." class="border-3 rounded-3 form-control" type="text"
-                                       value="" th:field="*{email}">
+                                <label class="ms-2 fw-semibold text-secondary">Email</label>
+                                <input placeholder="Type here..." class="border-3 rounded-3 form-control" type="email"
+                                       value="" name="reg_email">
                             </div>
                             <div class="mb-3 col-lg-6 col-12">
-                                <label class="mb-1 ms-2">Gender</label>
-                                <select th:field="*{gender}" name="gender" class="border-3 rounded-3 form-select">
+                                <label class="ms-2 fw-semibold text-secondary">Gender</label>
+                                <select name="reg_gender" class="border-3 rounded-3 form-select">
                                     <option value="">Select one...</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                 </select>
                             </div>
                             <div class="mb-3 col-lg-6 col-12">
-                                <label class="mb-1 ms-2">Looking for</label>
-                                <select th:field="*{preference}" name="pref" class="border-3 rounded-3 form-select">
+                                <label class="ms-2 fw-semibold text-secondary">Looking for</label>
+                                <select name="reg_preference" class="border-3 rounded-3 form-select">
                                     <option value="">Select one...</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
@@ -86,19 +86,19 @@
                                 </select>
                             </div>
                             <div class="col-12">
-                                <label class="mb-1 ms-2">Date of birth</label>
-                                <input th:field="*{dob}" placeholder="Select your birthdate..."
+                                <label class="ms-2 fw-semibold text-secondary">Date of birth</label>
+                                <input name="reg_dob" placeholder="Select your birthdate..."
                                        class="border-3 rounded-3 mb-3 form-control" type="date" value="">
                             </div>
                             <div class="col-12">
-                                <label class="mb-1 ms-2">Password</label>
-                                <input th:field="*{password}" placeholder="Type here..."
+                                <label class="ms-2 fw-semibold text-secondary">Password</label>
+                                <input placeholder="Type here..."
                                        class="border-3 rounded-3 mb-3 form-control" type="password" value=""
-                                       name="password">
+                                       name="reg_password">
                             </div>
                         </div>
                         <div class="mt-4">
-                            <button type="submit" class="fw-bold w-100 py-2 rounded-5 mb-2 btn btn-dark btn-sm">
+                            <button type="submit" class="fw-bold w-100 py-2 rounded-5 mb-2 button small">
                                 CREATE ACCOUNT
                             </button>
                             <p class="text-center small">
@@ -111,13 +111,10 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="registrationSuccessModalToggle" aria-hidden="false" aria-labelledby="registrationSuccessModalToggle" tabindex="-1">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal fade" id="registrationSuccessModalToggle" aria-hidden="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-white text-dark">
-                <div class="border-0 px-4 pb-0 modal-header">
-                    <div class="text-start modal-title h4">
-                        <div class="fw-bold text-success">Welcome</div>
-                    </div>
+                <div class="border-0 px-4 pt-4 pb-0 modal-header">
                     <button
                         type="button"
                         class="btn-close btn-close-dark"
@@ -126,11 +123,44 @@
                         onclick="$('#registrationSuccessModalToggle').modal('hide')">
                     </button>
                 </div>
-                <div class="px-4 modal-body">
-                    <span class="fw-bold fst-italic">
-                        Your account has been created successfully.
+                <div class="px-4 modal-body d-flex p-5 pt-3 align-items-center justify-content-center flex-column text-center">
+                    <i class="bi bi-arrow-through-heart-fill mb-3 text-theme display-3"></i>
+                    <span class="fw-semibold fs-4 mb-2" style="color: #313131">
+                        Account created!!!
                     </span>
-                    Sign in to start your journey now.
+                    <p class="text-secondary mb-3">Let's get started. Please be nice to other people, and the best will come to you.</p>
+                    <button
+                            class="button px-5"
+                            onclick="$('#registrationSuccessModalToggle').modal('hide')">
+                        ROGER
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" style="transform: scale(.8)" id="errorModalToggle" aria-hidden="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-white text-dark shadow">
+                <div class="border-0 px-4 pt-4 pb-0 modal-header">
+                    <button
+                            type="button"
+                            class="btn-close btn-close-dark"
+                            aria-label="Close"
+                            role="button"
+                            onclick="$('#errorModalToggle').modal('hide')">
+                    </button>
+                </div>
+                <div class="px-4 modal-body d-flex p-5 align-items-center justify-content-center flex-column text-center">
+                    <i class="bi bi-exclamation-circle-fill mb-1 text-danger display-3"></i>
+                    <span class="fw-semibold fs-4 mb-2 text-danger">
+                        ERROR
+                    </span>
+                    <p class="text-secondary mb-3" id="errorDetail">Error detail should be here. Otherwise, an unknown error has occurred.</p>
+                    <button
+                            class="button bg-secondary px-5"
+                            onclick="$('#errorModalToggle').modal('hide')">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>

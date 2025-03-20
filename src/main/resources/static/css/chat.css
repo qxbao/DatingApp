@@ -13,10 +13,12 @@
 }
 
 .message  {
-    border-radius: 100px;
+    white-space: pre;
+    border-radius: 20px;
     max-width: 80%;
     display: inline-block;
     margin-bottom: 3px;
+    text-wrap: wrap;
 }
 
 .message.received {
@@ -29,4 +31,24 @@
     background-color: #0084ff;
     color: white;
     margin-left: auto;
+}
+
+.message-text {
+    min-height: 1em;
+    max-height: 97px;
+    width: 100%;
+    align-content: center;
+    outline: none;
+    overflow: hidden;
+    border-radius: 20px;
+    background-color: #eeeeee;
+}
+
+[placeholder]:empty::before {
+    content: attr(placeholder);
+    color: #555;
+}
+
+[placeholder]:empty:focus::before {
+    content: "";
 }

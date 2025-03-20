@@ -5,13 +5,13 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Table(name = "user_like")
+@Table(name = "user_swipe")
 @Entity
 @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
-public class UserLike {
+public class UserSwipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id", nullable = false)
+    @Column(name = "swipe_id", nullable = false)
     private Long id;
 
     @ManyToOne
@@ -19,6 +19,8 @@ public class UserLike {
     @ManyToOne
     private User liked;
 
-    @Column(name = "like_date", nullable = false)
+    @Column(name = "swipe_is_like", nullable = false)
+    private boolean isLike;
+    @Column(name = "swipe_date", nullable = false)
     private LocalDateTime likeDate;
 }

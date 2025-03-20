@@ -6,16 +6,14 @@ import fit.se2.datingapp.dto.ProfileDTO;
 import fit.se2.datingapp.dto.SwipeRequestDTO;
 import fit.se2.datingapp.dto.SwipeResponseDTO;
 import fit.se2.datingapp.model.User;
-import fit.se2.datingapp.model.UserMatch;
 import fit.se2.datingapp.model.UserPhoto;
 import fit.se2.datingapp.model.UserProfile;
 import fit.se2.datingapp.service.MatchingService;
-import fit.se2.datingapp.service.ProfileUtilityService;
-import fit.se2.datingapp.service.UserPhotoUtilityService;
-import fit.se2.datingapp.service.UserUtilityService;
+import fit.se2.datingapp.service.ProfileService;
+import fit.se2.datingapp.service.UserPhotoService;
+import fit.se2.datingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,19 +26,19 @@ import java.util.stream.Collectors;
 public class MatchingController {
 
     @Autowired
-    private ProfileUtilityService profileService;
+    private ProfileService profileService;
 
     @Autowired
-    private UserPhotoUtilityService photoService;
+    private UserPhotoService photoService;
 
     @Autowired
     private MatchingService matchingService;
     @Autowired
-    private UserUtilityService userService;
+    private UserService userService;
 
     @PostMapping("/swipe")
     public ResponseEntity<SwipeResponseDTO> handleSwipe(@RequestBody SwipeRequestDTO swipeRequest) {
-        User currentUser = UserUtilityService.getCurrentUser();
+        User currentUser = UserService.getCurrentUser();
         assert currentUser != null;
         if (Objects.equals(currentUser.getId(), swipeRequest.getTargetUserId())) {
             return ResponseEntity.badRequest().body(SwipeResponseDTO.builder()
@@ -48,7 +46,7 @@ public class MatchingController {
                     .message("You cannot swipe on your own profile.")
                     .build());
         }
-        // Record the swipe action
+
         boolean isMatch = matchingService.processSwipe(
                 currentUser.getId(),
                 swipeRequest.getTargetUserId(),
@@ -63,14 +61,13 @@ public class MatchingController {
 
     @GetMapping("/next-profile")
     public ResponseEntity<ProfileDTO> getNextProfile() {
-        User currentUser = UserUtilityService.getCurrentUser();
+        User currentUser = UserService.getCurrentUser();
         assert currentUser != null;
         UserProfile nextProfile = matchingService.findNextProfileForUser(currentUser);
 
         if (nextProfile == null) {
             return ResponseEntity.noContent().build();
         }
-        System.out.println(nextProfile.getHeight());
 
         User profileUser = nextProfile.getUser();
         List<UserPhoto> photos = photoService.getUserPhotos(profileUser);
@@ -97,7 +94,7 @@ public class MatchingController {
     }
     @GetMapping("/active-convers")
     public ResponseEntity<ActiveConversationDTO> getActiveConversations() {
-        User currentUser = UserUtilityService.getCurrentUser();
+        User currentUser = UserService.getCurrentUser();
         if (currentUser == null) {
             return ResponseEntity.badRequest().body(null);
         } else {
