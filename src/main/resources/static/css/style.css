@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 :root {
-    --bgColor: linear-gradient(45deg, #2f3fe7 25%, 50%, #2a8d81) !important;
+    --bgColor: linear-gradient(45deg, #1a2be1 25%, 50%, #7119b9) !important;
     --textColor: #ffffff;
     --lightTextColor: #747474;
     --cardBgColor: white;

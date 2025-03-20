@@ -17,16 +17,15 @@ import java.util.Objects;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
-
+    private final UserRepository userRepository;
+    private final MatchingService matchingService;
+    private final UserPhotoService userPhotoService;
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private MatchingService matchingService;
-
-    @Autowired
-    private UserPhotoService userPhotoService;
-
+    public GlobalControllerAdvice(UserRepository userRepository, MatchingService matchingService, UserPhotoService userPhotoService) {
+        this.userRepository = userRepository;
+        this.matchingService = matchingService;
+        this.userPhotoService = userPhotoService;
+    }
     @ModelAttribute("user")
     public User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -79,7 +78,7 @@ public class GlobalControllerAdvice {
                     .map(match -> Objects.equals(match.getUser1().getId(), user.getId()) ? match.getUser2() : match.getUser1())
                     .toList();
             return matchedUsers.stream()
-                    .map(u -> userPhotoService.getUserPhotos(u))
+                    .map(userPhotoService::getUserPhotos)
                     .flatMap(List::stream)
                     .toList();
         }

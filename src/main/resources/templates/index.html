@@ -19,6 +19,9 @@
     <div class="container">
         <div class="d-flex flex-column align-items-center vh-100 justify-content-center flex-1">
             <div class="text-white text-center mb-4">
+                <div class="heartIcon">
+                    <i class="bi bi-heart-fill fs-2 text-danger"></i>
+                </div>
                 <div class="fw-black display-4">
                     Heartbeat
                 </div>
@@ -47,15 +50,19 @@
     </div>
     <div class="modal fade" id="registrationModalToggle" aria-hidden="true" aria-labelledby="registrationModalToggle"
          tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered">
             <div class="modal-content bg-white text-dark">
                 <div class="border-0 px-4 modal-header">
                     <div class="text-start">
-                        <div class="fw-bold h3 text-theme">Create an account</div>
                     </div>
-                    <button type="button" class="btn-close btn-close-dark" aria-label="Close"></button>
+                    <button
+                            type="button"
+                            class="btn-close btn-close-dark"
+                            onclick="$('#registrationModalToggle').modal('hide')"
+                            aria-label="Close"></button>
                 </div>
                 <div class="px-4 pt-0 modal-body">
+                    <div class="fw-bold h2 text-theme text-center mb-4">Account Registration</div>
                     <form th:action="@{/user/register}" id="registerForm" method="POST">
                         <div class="row">
                             <div class="mb-3 col-lg-6 col-12">
@@ -97,13 +104,12 @@
                                        name="reg_password">
                             </div>
                         </div>
-                        <div class="mt-4">
+                        <div class="mt-4 d-flex flex-column align-items-center">
                             <button type="submit" class="fw-bold w-100 py-2 rounded-5 mb-2 button small">
                                 CREATE ACCOUNT
                             </button>
                             <p class="text-center small">
-                                By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy
-                                Policy</a>
+                                By signing up, you agree to our <a href="#">Terms of Service</a>
                             </p>
                         </div>
                     </form>

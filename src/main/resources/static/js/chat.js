@@ -59,7 +59,7 @@ const loadMessage = (from, to) => {
         if (!data.overflow) {
             const loadMoreEl = document.createElement('div');
             loadMoreEl.className = 'text-decoration-underline text-center mb-2 text-primary';
-            loadMoreEl.textContent = 'Load older messages';
+            loadMoreEl.textContent = 'Load previous messages';
             loadMoreEl.style.cursor = 'pointer';
             loadMoreEl.onclick = function() {
                 loadMessage(to, to + 10);
