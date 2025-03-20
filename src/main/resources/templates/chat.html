@@ -9,6 +9,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Heartbeat | Find your perfect half</title>
     <link rel="stylesheet" href="/css/chat.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const uid = /*[[${user.id}]]*/ 'default';
+        const tuid  = /*[[${targetUser.id}]]*/ 'default';
+        /*]]>*/
+    </script>
+    <script src="/js/chat.js"></script>
 </head>
 <body>
 <div layout:fragment="content">
@@ -17,21 +26,22 @@
             <div class="col-12 col-md-9 col-lg-7 d-flex align-items-center justify-content-center">
                 <div class="card chatBox border-0 rounded-3 overflow-hidden shadow">
                     <div class="card-header bg-white p-3 d-flex align-items-center">
-                        <div th:style="'background-image: url(' + ${targetAvatar} + ')'" class="chatAvatar rounded-circle me-3" style="width:50px" alt="">
+                        <div th:style="'background-image: url(' + ${targetAvatar} + ');width:50px'" class="chatAvatar rounded-circle me-3" style="">
                         </div>
                         <div>
                             <div class="fs-5 fw-semibold" th:text="${targetUser.name}"></div>
-                            <div class="small text-secondary">Click to see their profile</div>
+                            <div id="targetStatus" class="small text-secondary">Offline</div>
                         </div>
                     </div>
-                    <div class="card-body overflow-y-scroll"></div>
+                    <div class="card-body overflow-y-scroll" id="chatContainer"></div>
                     <div class="card-footer p-3 bg-white">
                         <div class="input-group">
                             <textarea
                                 class="form-control"
+                                id="messageInput"
                                 placeholder="Message..."
                                 style="height: 1px !important;"></textarea>
-                            <button class="btn btn-outline-primary" type="button">
+                            <button class="btn btn-outline-primary" onclick="sendMessage()" type="button">
                                 <i class="bi bi-send me-1"></i>Send
                             </button>
                         </div>

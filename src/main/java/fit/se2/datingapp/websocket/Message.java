@@ -10,6 +10,7 @@ public class Message {
         LEAVE
     }
     private MessageType type;
-    private String sender;
+    private Long sender;
+    private Long receiver;
     private String content;
 }
