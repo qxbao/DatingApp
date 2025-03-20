@@ -1,13 +1,20 @@
 package fit.se2.datingapp.controller;
 
 import fit.se2.datingapp.constants.Const;
+import fit.se2.datingapp.dto.GetMessageResponseDTO;
+import fit.se2.datingapp.dto.SendMessageDTO;
+import fit.se2.datingapp.dto.SendMessageResponseDTO;
+import fit.se2.datingapp.model.Message;
 import fit.se2.datingapp.model.User;
 import fit.se2.datingapp.model.UserPhoto;
+import fit.se2.datingapp.repository.MessageRepository;
 import fit.se2.datingapp.service.MatchingService;
+import fit.se2.datingapp.service.MessageService;
 import fit.se2.datingapp.service.UserPhotoUtilityService;
 import fit.se2.datingapp.service.UserUtilityService;
-import fit.se2.datingapp.websocket.Message;
+import fit.se2.datingapp.websocket.SocketMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -15,10 +22,9 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,41 +36,98 @@ public class ChatController {
     private final UserUtilityService userUtilityService;
     private final UserPhotoUtilityService userPhotoUtilityService;
     private final SimpMessagingTemplate template;
+    private final MessageService messageService;
+    private final MessageRepository messageRepository;
 
     @Autowired
-    public ChatController(MatchingService matchingService, UserUtilityService userUtilityService, UserPhotoUtilityService userPhotoUtilityService, SimpMessagingTemplate template) {
+    public ChatController(MatchingService matchingService, UserUtilityService userUtilityService, UserPhotoUtilityService userPhotoUtilityService, SimpMessagingTemplate template, MessageService messageService, MessageRepository messageRepository) {
         this.matchingService = matchingService;
         this.userUtilityService = userUtilityService;
         this.userPhotoUtilityService = userPhotoUtilityService;
         this.template = template;
+        this.messageService = messageService;
+        this.messageRepository = messageRepository;
     }
 
-    @MessageMapping(value="chat.sendMessage")
+    @PostMapping("/sendMessage")
     @SendTo("/queue/chat")
-    public void sendMessage(@Payload Message message) {
-        List<Long> matchedUsers = List.of(message.getSender(), message.getReceiver());
+    public ResponseEntity<SendMessageResponseDTO> sendMessage(
+            @RequestBody SendMessageDTO sendMessageDTO,
+            @ModelAttribute("user") User user
+    ) {
+        User receiver = userUtilityService.getUserById(sendMessageDTO.getReceiverId());
+        if (Objects.equals(
+                sendMessageDTO.getSenderId(), null) ||
+                receiver == null ||
+                Objects.equals(sendMessageDTO.getReceiverId(), null) ||
+                !sendMessageDTO.getSenderId().equals(user.getId()) ||
+                !matchingService.isAMatchBetween(user, receiver)
+                )  {
+            return ResponseEntity.badRequest().body(null);
+        }
+        Message created = messageService.create(
+                    Message
+                        .builder()
+                            .sender(user)
+                            .receiver(receiver)
+                            .content(sendMessageDTO.getContent())
+                        .build());
+        List<Long> matchedUsers = List.of(sendMessageDTO.getSenderId(), sendMessageDTO.getReceiverId());
         for (String email : matchedUsers.stream().map(userUtilityService::getUserById).map(User::getEmail).toList()) {
-            System.out.println(email);
             template.convertAndSendToUser(
-                email,
-                "/queue/chat",
-                message
+                    email,
+                    "/queue/chat",
+                    SocketMessage.builder()
+                        .sender(user.getId())
+                        .receiver(receiver.getId())
+                        .content(sendMessageDTO.getContent().trim())
+                        .type(SocketMessage.MessageType.CHAT)
+                        .build()
             );
         }
+        return ResponseEntity.ok(
+                SendMessageResponseDTO
+                    .builder()
+                    .timestamp(created.getDate().atZone(ZoneId.systemDefault()).toEpochSecond())
+                    .build());
+    }
+
+    @GetMapping(value = "/getMessage")
+    public ResponseEntity<GetMessageResponseDTO> getMessage(
+            @RequestParam int fromIndex,
+            @RequestParam int toIndex,
+            @RequestParam  Long receiverId,
+            @ModelAttribute("user") User user
+            ) {
+        User receiver = userUtilityService.getUserById(receiverId);
+        if (receiver == null ||
+                user == null ||
+                !matchingService.isAMatchBetween(user, receiver)){
+            return ResponseEntity.badRequest().body(null);
+
+        }
+        int offset = toIndex - fromIndex;
+        List<Message> messages = messageRepository.getMessagesByRange(user, receiver, fromIndex, offset);
+        return ResponseEntity.ok(
+                GetMessageResponseDTO.builder()
+                    .messages(messages.stream().map(Message::getContent).toList())
+                    .senders(messages.stream().map(m -> m.getSender().getId()).toList())
+                    .isOverflow(messages.size() < offset)
+                .build());
     }
 
     @MessageMapping(value="chat.addUser")
     @SendTo("/queue/chat")
-    public void addUser(@Payload Message message, SimpMessageHeaderAccessor accessor) {
-        List<Long> matchedUsers = List.of(message.getSender(), message.getReceiver());
+    public void addUser(@Payload SocketMessage socketMessage, SimpMessageHeaderAccessor accessor) {
+        List<Long> matchedUsers = List.of(socketMessage.getSender(), socketMessage.getReceiver());
         for (Long userId : matchedUsers) {
             template.convertAndSendToUser(
                 userUtilityService.getUserById(userId).getEmail(),
                 "/queue/chat",
-                message
+                    socketMessage
             );
         }
-        Objects.requireNonNull(accessor.getSessionAttributes()).put("uid", message.getSender());
+        Objects.requireNonNull(accessor.getSessionAttributes()).put("uid", socketMessage.getSender());
     }
     @GetMapping(value ="/{uid}")
     public String getChatPage(@PathVariable String uid, Model model) {

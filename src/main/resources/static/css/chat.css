@@ -1,5 +1,32 @@
 .chatBox {
-    height: 90% !important;
+    max-height: 90% !important;
     width: 100% !important;
     color: black;
+}
+
+#chatContainer {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 60vh !important;
+    max-height: 60vh;
+}
+
+.message  {
+    border-radius: 100px;
+    max-width: 80%;
+    display: inline-block;
+    margin-bottom: 3px;
+}
+
+.message.received {
+    background-color: #e5e5ea;
+    color: black;
+    margin-right: auto;
+}
+
+.message.sent {
+    background-color: #0084ff;
+    color: white;
+    margin-left: auto;
 }

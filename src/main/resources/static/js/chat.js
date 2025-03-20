@@ -1,6 +1,7 @@
 let stompClient = null;
 document.addEventListener('DOMContentLoaded', function() {
     connectWs();
+    loadMessage(0, 10);
 })
 
 const connectWs = () => {
@@ -21,16 +22,44 @@ const connectWs = () => {
 
 const sendMessage = () => {
     const messageContent = document.getElementById('messageInput').value;
-    if (stompClient && messageContent) {
-        stompClient.send('/app/chat.sendMessage', {}, JSON.stringify({
-            sender: uid,
-            receiver: tuid,
-            content: messageContent,
-            type: 'CHAT',
-        }));
-        document.getElementById('messageInput').value = '';
-        messageContent.value = '';
+    if (messageContent) {
+        $.ajax({
+            type: "POST",
+            url:  "/chat/sendMessage",
+            data: JSON.stringify({ senderId : uid, receiverId: tuid, content: messageContent }),
+            contentType: "application/json",
+            complete: function (data) {
+                document.getElementById('messageInput').value = '';
+            },
+        });
     }
+}
+
+const loadMessage = (from, to) => {
+    $.ajax({
+        type: "GET",
+        url:  "/chat/getMessage",
+        data: { receiverId: tuid, fromIndex: from, toIndex: to },
+        contentType: "application/json",
+    }).done(function (data) {
+        console.log(data)
+        for (let i = 0; i < data.messages.length; i++) {
+            const msgEl = createMessageElement(data.messages[i], data.senders[i]);
+            document.getElementById('chatContainer').prepend(msgEl);
+        }
+    });
+}
+
+const createMessageElement = (content, sender) => {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message px-3 py-2';
+    if (sender === uid) {
+        messageDiv.classList.add('sent');
+    } else {
+        messageDiv.classList.add('received');
+    }
+    messageDiv.innerHTML = content;
+    return messageDiv;
 }
 
 const onMessageReceived = (payload) => {
@@ -52,8 +81,8 @@ const onMessageReceived = (payload) => {
             }));
         }
     } else if (message.type === "CHAT") {
-        messageDiv.innerHTML = message.content;
-        chatContainer.appendChild(messageDiv);
+        const msgEl = createMessageElement(message.content, message.sender);
+        document.getElementById('chatContainer').appendChild(msgEl);
         chatContainer.scrollTop = chatContainer.scrollHeight;
     } else {
         if (message.sender === tuid) {

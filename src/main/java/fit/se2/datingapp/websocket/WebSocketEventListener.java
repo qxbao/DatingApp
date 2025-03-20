@@ -12,7 +12,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Component
 @Slf4j
@@ -31,15 +30,15 @@ public class WebSocketEventListener {
             List<String> matchedUsers = matchingService.getMatches(userUtilityService.getUserById(uid)).stream().map(
                 match -> Objects.equals(match.getUser1().getId(), uid) ? match.getUser2().getEmail() : match.getUser1().getEmail()
             ).toList();
-            Message message = Message.builder()
-                    .type(Message.MessageType.LEAVE)
+            SocketMessage socketMessage = SocketMessage.builder()
+                    .type(SocketMessage.MessageType.LEAVE)
                     .sender(uid)
                     .build();
             for (String email : matchedUsers) {
                 messageOperations.convertAndSendToUser(
                         email,
                         "/queue/chat",
-                        message
+                        socketMessage
                 );
             }
         }

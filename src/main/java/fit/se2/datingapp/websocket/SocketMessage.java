@@ -3,7 +3,7 @@ package fit.se2.datingapp.websocket;
 import lombok.*;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor @Builder
-public class Message {
+public class SocketMessage {
     public enum MessageType {
         CHAT,
         JOIN,

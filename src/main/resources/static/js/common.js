@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('/api/active-convers')
         .then(response => response.json())
         .then(data => {
-            const container = document.getElementById('chatContainer');
+            const container = document.getElementById('chatUserContainer');
             container.innerHTML = '';
             if (data.len === 0) {
                 container.innerHTML = '<p>No active conversations</p>';
