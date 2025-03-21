@@ -18,11 +18,11 @@ public class UserProfile {
 
     @Column(name = "profile_height")
     private String height;
-    @Column(name = "profile_occupation")
+    @Column(name = "profile_occupation", length = 20)
     private String occupation;
-    @Column(name = "profile_education")
+    @Column(name = "profile_education", length = 20)
     private String education;
-    @Column(name="profile_bio")
+    @Column(name="profile_bio", length = 200)
     private String bio;
     @Column(name="profile_religion")
     private String religion;

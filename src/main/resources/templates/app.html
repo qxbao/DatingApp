@@ -15,34 +15,62 @@
 <div layout:fragment="content">
     <div class="container">
         <div class="row justify-content-center h-100">
-            <div class="col-12 col-md-9 d-flex">
-                <div class="card w-100 border-0 shadow rounded-4 position-relative my-auto" id="profile-card">
-                    <div class="swipe-buttons-container">
-                        <button id="swipe-left" class="border-0 rounded-circle floating-button floating-left">
-                            <i class="bi bi-x-lg text-danger fs-3"></i>
-                        </button>
-                        <button id="swipe-right" class="border-0 rounded-circle floating-button floating-right">
-                            <i class="bi bi-heart-fill text-success fs-3"></i>
-                        </button>
+            <div class="col-12 col-lg-9 d-flex flex-column">
+                <div class="card w-100 border-0 shadow rounded-4 position-relative mb-auto" id="profile-card">
+                    <div class="relative-parent">
+                        <div class="swipe-buttons-container">
+                            <button id="swipe-left" class="border-0 rounded-circle floating-button floating-left">
+                                <i class="bi bi-x-lg display-5 m-0 p-0" style="line-height: 0;"></i>
+                            </button>
+                            <button id="swipe-right" class="border-0 rounded-circle floating-button floating-right">
+                                <i class="bi bi-heart-fill display-5 m-0 p-0" style="line-height: 0;"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="card-body overflow-hidden rounded-4 p-0 container-fluid d-flex">
-                        <div class="row flex-grow-1 d-flex">
+                    <div class="card-body overflow-hidden rounded-4 p-0 d-flex">
+                        <div class="flex-grow-1 d-flex">
                             <div
-                                    style="background-image: url('https://picsum.photos/1000')"
-                                    class="col-12 col-lg-6 p-0 userAvatar"
-                            ></div>
-                            <div class="col-12 col-lg-6">
-                                <div class="text-dark p-4 d-md-flex flex-column justify-content-center h-100">
-                                    <h3 class="h2 mb-0 fw-bold"><span id="name">Name</span>, <span id="age">27</span></h3>
-                                    <div class="mb-1">
-                                        <span class="badge bg-secondary text-light" id="height">-1 cm</span>
-                                        <span class="badge bg-success text-light" id="religion">Religion</span>
+                                    style="background-image: url('https://picsum.photos/1000');flex:1;"
+                                    class="px-0 userAvatar"
+
+                            >
+                                <div id="darkGradientLayer" class="w-100 h-100 d-flex flex-column justify-content-end d-xl-none text-light">
+                                    <div class="display-5 px-4" style="transform: translateY(-50px);">
+                                        <div class="mb-2">
+                                            <span class="target_name fw-bold me-2">Name</span><span class="target_age">99</span>
+                                        </div>
+                                        <div class="fs-5 mb-2">
+                                            <span class="badge bg-secondary text-light target_height rounded-5">-1 cm</span>
+                                            <span class="badge bg-success text-light target_religion rounded-5">Religion</span>
+                                        </div>
+                                        <div class="fs-5">
+                                            <div class="small mb-1 target_education">Studying at <span class="fw-bold" >Random School</span></div>
+                                            <div class="small mb-1 target_occupation">Working at <span class="fw-bold">Random Company</span></div>
+                                        </div>
+                                        <div class="my-3 fs-5">
+                                            <div class="d-flex align-items-center">
+                                                <span class="target_bio">
+                                                <i class="bi bi-quote fs-1 lh-1"></i>
+                                                Bio should be here</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="small mb-1" id="education">Studying at <span class="fw-bold" >Random School</span></div>
-                                    <div class="small mb-1" id="occupation">Working at <span class="fw-bold">Random Company</span></div>
+                                </div>
+                            </div>
+                            <div class="d-none px-0 d-xl-block" style="flex:1;">
+                                <div class="text-dark p-4 d-md-flex flex-column justify-content-center h-100">
+                                    <h3 class="h2 mb-0 fw-bold">
+                                        <span class="target_name">Name</span>, <span class="target_age">99</span>
+                                    </h3>
+                                    <div class="mb-1">
+                                        <span class="badge bg-secondary text-light target_height">-1 cm</span>
+                                        <span class="badge bg-success text-light target_religion">Religion</span>
+                                    </div>
+                                    <div class="small mb-1 target_education">Studying at <span class="fw-bold" >Random School</span></div>
+                                    <div class="small mb-1 target_occupation">Working at <span class="fw-bold">Random Company</span></div>
                                     <div class="my-3">
                                         <div class="fw-bold small">About me</div>
-                                        <p id="bio">Bio should be here</p>
+                                        <p class="target_bio">Bio should be here</p>
                                     </div>
                                 </div>
                             </div>

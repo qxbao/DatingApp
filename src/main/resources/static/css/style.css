@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('dynamicBackground.css');
 
 :root {
     --bgColor: linear-gradient(45deg, #1a2be1 25%, 50%, #7119b9) !important;
@@ -12,10 +12,14 @@
 }
 
 body {
-    font-family: "Inter", sans-serif;
+    font-family: "Source Sans Pro", sans-serif;
     background: var(--bgColor);
     color: var(--textColor);
     transition: .3s all;
+}
+
+.text-shadow {
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.53);
 }
 
 .card {
@@ -71,4 +75,8 @@ body {
 
 .button:active {
     transform: scale(0.95);
+}
+
+#chatUserContainerMobile {
+    background: rgba(255, 255, 255, 0.65);
 }

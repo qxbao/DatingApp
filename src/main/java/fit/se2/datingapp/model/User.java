@@ -25,7 +25,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id", nullable = false)
     private Long id;
-    @Column(name="user_name", nullable = false)
+    @Column(name="user_name", nullable = false, length = 50)
     private String name;
     @Column(name="user_dob", nullable = false)
     private LocalDate dob; // date of birth
@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private String gender;
     @Column(name="user_pref", nullable = false)
     private String preference;
-    @Column(name="user_password", nullable = false)
+    @Column(name="user_password", nullable = false, length = 1000)
     private String password;
 
     @Override

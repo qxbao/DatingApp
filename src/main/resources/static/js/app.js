@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const container = document.querySelector('.container');
         container.innerHTML = `
         <div class="text-center h-100 d-flex flex-column justify-content-center align-items-center">
+            <i class="bi bi-search-heart display-2 mb-3"></i>
             <h3>No more profiles available</h3>
             <p>We're finding more matches for you!</p>
         </div>
@@ -138,37 +139,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 resetCard();
                 // Update card with new profile data
                 const card = document.getElementById('profile-card');
-                const avatar = card.querySelector('.userAvatar');
-                const name = card.querySelector('#name');
-                const age = card.querySelector('#age');
-                const religion = card.querySelector('#religion');
-                const height = card.querySelector('#height');
-                const education = card.querySelector('#education');
-                const occupation = card.querySelector('#occupation');
-                const bio = card.querySelector('#bio');
-
-                // Set profile ID for next swipe action
                 card.dataset.profileId = data.id;
+                document.querySelector(".userAvatar").style.backgroundImage = `url('${data.mainPhotoUrl}')`;
+                writeAllElements("target_name", data.name);
+                writeAllElements("target_age", data.age);
 
-                // Update profile photo
-                avatar.style.backgroundImage = `url('${data.mainPhotoUrl}')`;
-                name.textContent = data.name;
-                age.textContent = data.age;
-                handleNullableElements(height, data.height, " cm", "badge bg-secondary text-light");
-                handleNullableElements(religion, data.religion, "", "badge bg-success text-light");
-                if (data.occupation) {
-                    occupation.className = "small mb-1";
-                    occupation.innerHTML = `Working at <span class="fw-bold">${data.occupation}</span>`;
-                } else {
-                    occupation.className = "small mb-1 d-none";
-                }
-                if (data.education) {
-                    education.className = "small mb-1";
-                    education.innerHTML = `Studying at <span class="fw-bold">${data.education}</span>`;
-                } else {
-                    education.className = "small mb-1 d-none";
-                }
-                bio.textContent = data.bio || 'No bio';
+                if (data.height) writeAllElements("target_height", data.height + " cm");
+                else hideAllElements("target_height");
+
+                if (data.religion) writeAllElements("target_religion", data.religion);
+                else hideAllElements("target_religion");
+
+                if (data.occupation) writeAllElements("target_occupation", `Work at <b>${data.occupation}</b>`)
+                else hideAllElements("target_occupation");
+
+                if (data.education) writeAllElements("target_education", `Study at <b>${data.education}</b>`);
+                else hideAllElements("target_education");
+                writeAllElements("target_bio", '<i class="bi bi-quote me-2 lh-1"></i>' + (data.bio || 'No bio')
+            )
+                ;
             })
             .catch(error => {
                 console.error('Error loading next profile:', error);
@@ -181,12 +170,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
 
-    function handleNullableElements(element, value, postfix, rootClasses) {
-        if (value) {
-            element.className = rootClasses;
-            element.textContent = value + postfix;
-        } else {
-            element.className = `${rootClasses} d-none`;
+    function writeAllElements(className, content) {
+        const elements = document.getElementsByClassName(className);
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].classList.remove("d-none");
+            elements[i].innerHTML = content;
+        }
+    }
+
+    function hideAllElements(className) {
+        const elements = document.getElementsByClassName(className);
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].classList.add("d-none");
         }
     }
 });

@@ -1,9 +1,10 @@
 $(document).ready(function() {
     const queryString = window.location.search;
+    backgroundEventInit();
     const urlParams = new URLSearchParams(queryString);
-    const isFromRegistration = urlParams.get('fromRegister');
-    if (isFromRegistration) {
-        $('#registrationSuccessModalToggle').modal('show');
+    const loginErr = urlParams.get('error');
+    if (loginErr) {
+        displayError("Please check your email and password");
     }
     document.getElementById('registerForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -53,4 +54,30 @@ $(document).ready(function() {
 const displayError = (message) => {
     document.querySelector("#errorDetail").innerText = message;
     $('#errorModalToggle').modal('show');
+}
+
+const backgroundEventInit = () => {
+    const interBubble = document.querySelector(".interactive");
+    let curX = 0;
+    let curY = 0;
+    let tgX = 0;
+    let tgY = 0;
+
+    function move() {
+        curX += (tgX - curX) / 20;
+        curY += (tgY - curY) / 20;
+        interBubble.style.transform = `translate(${Math.round(curX)}px, ${Math.round(curY)}px)`;
+        requestAnimationFrame(move);
+    }
+
+    window.addEventListener('mousemove', (event) => {
+        tgX = event.clientX;
+        tgY = event.clientY;
+    });
+
+    move();
+    return ()  => window.removeEventListener('mousemove', (event) => {
+        tgX = event.clientX;
+        tgY = event.clientY;
+    });
 }

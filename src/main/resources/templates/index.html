@@ -16,16 +16,35 @@
     <link rel="stylesheet" th:href="@{/css/index.css}">
 </head>
 <body>
+    <div class="gradient-bg">
+        <svg xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+                    <feBlend in="SourceGraphic" in2="goo" />
+                </filter>
+            </defs>
+        </svg>
+        <div class="gradients-container">
+            <div class="g1"></div>
+            <div class="g2"></div>
+            <div class="g3"></div>
+            <div class="g4"></div>
+            <div class="g5"></div>
+            <div class="interactive"></div>
+        </div>
+    </div>
     <div class="container">
         <div class="d-flex flex-column align-items-center vh-100 justify-content-center flex-1">
-            <div class="text-white text-center mb-4">
+            <div class="text-white text-center mb-5">
                 <div class="heartIcon">
                     <i class="bi bi-heart-fill fs-2 text-danger"></i>
                 </div>
-                <div class="fw-black display-4">
+                <div class="fw-black display-4 text-shadow">
                     Heartbeat
                 </div>
-                <div class='text-light fs-5 fst-italic'>- 5 A D8 B4 2 L8 -</div>
+                <div class='text-light fs-5 text-shadow'>Find the destiny together</div>
             </div>
             <div class="d-flex flex-column" style="width: 30vw; min-width: 300px">
                 <form th:action="@{/user/login}" method="POST" class="d-flex flex-column">
@@ -41,7 +60,7 @@
                     </div>
                     <button class='btn btn-dark fw-bold p-3 w-75 mx-auto border-0 rounded-5'>SIGN IN</button>
                 </form>
-                <div class='text-center mt-3 text-light small'>
+                <div class='text-center text-shadow mt-3'>
                     Don't have an account? <a class='text-light' href="#" data-bs-target="#registrationModalToggle"
                                               data-bs-toggle="modal">Create one now</a>
                 </div>
@@ -62,17 +81,19 @@
                             aria-label="Close"></button>
                 </div>
                 <div class="px-4 pt-0 modal-body">
-                    <div class="fw-bold h2 text-theme text-center mb-4">Account Registration</div>
+                    <div class="mb-4">
+                        <div class="fw-bold h2 text-theme text-center mb-2">Account Registration</div>
+                        <div class="text-center text-secondary">All fields are required</div>
+                    </div>
                     <form th:action="@{/user/register}" id="registerForm" method="POST">
                         <div class="row">
                             <div class="mb-3 col-lg-6 col-12">
                                 <label class="ms-2 fw-semibold text-secondary">Full name</label>
-                                <input placeholder="Type here..." class="border-3 rounded-3 form-control" type="text"
-                                       value="" name="reg_name">
+                                <input placeholder="3-50 characters" class="border-3 rounded-3 form-control" type="text" value="" name="reg_name">
                             </div>
                             <div class="mb-3 col-lg-6 col-12">
                                 <label class="ms-2 fw-semibold text-secondary">Email</label>
-                                <input placeholder="Type here..." class="border-3 rounded-3 form-control" type="email"
+                                <input placeholder="Email" class="border-3 rounded-3 form-control" type="email"
                                        value="" name="reg_email">
                             </div>
                             <div class="mb-3 col-lg-6 col-12">
@@ -99,7 +120,7 @@
                             </div>
                             <div class="col-12">
                                 <label class="ms-2 fw-semibold text-secondary">Password</label>
-                                <input placeholder="Type here..."
+                                <input placeholder="8+ characters"
                                        class="border-3 rounded-3 mb-3 form-control" type="password" value=""
                                        name="reg_password">
                             </div>

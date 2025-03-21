@@ -30,6 +30,7 @@ public class WebSecurityConfig {
                 .loginPage("/")
                 .loginProcessingUrl("/user/login")
                 .defaultSuccessUrl("/", true)
+                .failureUrl("/?error=true")
                 .permitAll()
             )
             .rememberMe(Customizer.withDefaults())
