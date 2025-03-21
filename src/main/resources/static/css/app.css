@@ -1,8 +1,63 @@
 .userAvatar {
-    background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
-    background-attachment: local;
+    background-position: center;
+    transition: background-image 0.3s ease;
+}
+
+.photo-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.6);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.photo-nav:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.prev-photo {
+    left: 15px;
+}
+
+.next-photo {
+    right: 15px;
+}
+
+.photo-indicators {
+    position: absolute;
+    background: rgba(52, 52, 52, 0.6);
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.indicator.active {
+    background: white;
+    width: 10px;
+    height: 10px;
 }
 
 .card {

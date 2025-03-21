@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.match && isLike) {
                     showMatchNotification(profileId);
+                    reloadActiveConversations();
                 }
             })
             .catch(error => {
@@ -137,10 +138,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (!data) return;
                 resetCard();
-                // Update card with new profile data
                 const card = document.getElementById('profile-card');
                 card.dataset.profileId = data.id;
-                document.querySelector(".userAvatar").style.backgroundImage = `url('${data.mainPhotoUrl}')`;
+                if (data.photoUrls.length > 0) initPhotoCarousel(data.photoUrls);
+                else initPhotoCarousel([data.mainPhotoUrl]);
                 writeAllElements("target_name", data.name);
                 writeAllElements("target_age", data.age);
 
@@ -183,5 +184,82 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 0; i < elements.length; i++) {
             elements[i].classList.add("d-none");
         }
+    }
+
+    function initPhotoCarousel(photoUrls) {
+        const carousel = document.getElementById('photoCarousel');
+        if (!carousel) return;
+
+        carousel.dataset.photos = JSON.stringify(photoUrls);
+        carousel.dataset.currentIndex = 0;
+
+        updateCarouselPhoto(carousel);
+
+        const indicatorsContainer = carousel.querySelector('.photo-indicators');
+        photoUrls.forEach((_, index) => {
+            const indicator = document.createElement('span');
+            indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+            indicator.dataset.index = index;
+            indicator.addEventListener('click', () => {
+                carousel.dataset.currentIndex = index;
+                updateCarouselPhoto(carousel);
+            });
+            indicatorsContainer.appendChild(indicator);
+        });
+
+        const prevBtn = carousel.querySelector('.prev-photo');
+        const nextBtn = carousel.querySelector('.next-photo');
+
+        prevBtn.addEventListener('click', () => {
+            const currentIndex = parseInt(carousel.dataset.currentIndex);
+            const photos = JSON.parse(carousel.dataset.photos);
+            const newIndex = (currentIndex - 1 + photos.length) % photos.length;
+            carousel.dataset.currentIndex = newIndex;
+            updateCarouselPhoto(carousel);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            const currentIndex = parseInt(carousel.dataset.currentIndex);
+            const photos = JSON.parse(carousel.dataset.photos);
+            const newIndex = (currentIndex + 1) % photos.length;
+            carousel.dataset.currentIndex = newIndex;
+            updateCarouselPhoto(carousel);
+        });
+    }
+
+    function updateCarouselPhoto(carousel) {
+        const photos = JSON.parse(carousel.dataset.photos);
+        const currentIndex = parseInt(carousel.dataset.currentIndex);
+
+        carousel.style.backgroundImage = `url('${photos[currentIndex]}')`;
+
+        const indicators = carousel.querySelectorAll('.indicator');
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentIndex);
+        });
+    }
+    function reloadActiveConversations() {
+        fetch('/api/active-convers')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('chatUserContainer');
+                const mobileContainer = document.getElementById('chatUserContainerMobile');
+                container.innerHTML = '';
+                mobileContainer.innerHTML = '';
+                if (data.len === 0) {
+                    container.innerHTML = '<p class="px-3">No active conversations</p>';
+                    mobileContainer.innerHTML = '<div class="text-black mx-auto my-auto">No active conversations</div>';
+                    return;
+                }
+                for (let i = 0; i < data.len; i++) {
+                    const chatItem = createChatItem(data.avatarUrls[i], data.names[i], data.lastMessages[i],  data.ids[i]);
+                    container.appendChild(chatItem);
+                    const chatItemMobile = createChatItemMobile(data.avatarUrls[i], data.names[i], data.lastMessages[i],  data.ids[i]);
+                    mobileContainer.appendChild(chatItemMobile);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching active conversations:', error);
+            });
     }
 });

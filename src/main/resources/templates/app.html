@@ -30,10 +30,18 @@
                     <div class="card-body overflow-hidden rounded-4 p-0 d-flex">
                         <div class="flex-grow-1 d-flex">
                             <div
-                                    style="background-image: url('https://picsum.photos/1000');flex:1;"
-                                    class="px-0 userAvatar"
-
+                                id="photoCarousel"
+                                style="background-image: url('https://picsum.photos/1000');flex:1;"
+                                class="px-0 userAvatar position-relative"
                             >
+                                <button class="photo-nav prev-photo">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <button class="photo-nav next-photo">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                                <div class="photo-indicators px-3 p-2 rounded-pill"></div>
+
                                 <div id="darkGradientLayer" class="w-100 h-100 d-flex flex-column justify-content-end d-xl-none text-light">
                                     <div class="display-5 px-4" style="transform: translateY(-50px);">
                                         <div class="mb-2">
