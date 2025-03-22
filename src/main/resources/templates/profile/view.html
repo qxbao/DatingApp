@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="_layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Heartbeat | Find your perfect half</title>
+    <script src="/js/profilePreview.js"></script>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="row justify-content-center h-100">
+            <div class="col-12 col-lg-9 d-flex flex-column">
+                <div class="card w-100 border-0 shadow rounded-4 position-relative mb-auto" id="profile-card">
+                    <div class="card-body overflow-hidden rounded-4 p-0 d-flex">
+                        <div class="flex-grow-1 d-flex">
+                            <div
+                                    id="photoCarousel"
+                                    th:data-current-index="0"
+                                    th:data-photos="${photos}"
+                                    style="background-image: url('https://picsum.photos/1000');flex:1;"
+                                    class="px-0 userAvatar position-relative"
+                            >
+                                <button class="photo-nav prev-photo">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <button class="photo-nav next-photo">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                                <div class="photo-indicators px-3 p-2 rounded-pill"></div>
+
+                                <div id="darkGradientLayer"
+                                     class="w-100 h-100 d-flex flex-column justify-content-end d-xl-none text-light">
+                                    <div class="display-5 px-4" style="transform: translateY(-50px);">
+                                        <div class="mb-2">
+                                            <span class="target_name fw-bold me-2" th:text="${targetUser.name}"></span><span
+                                                class="target_age" th:text="${age}"></span>
+                                        </div>
+                                        <div class="fs-5 mb-2">
+                                            <span
+                                                    class="badge bg-secondary text-light target_height rounded-5"
+                                                    th:if="${profile.height != null}"
+                                                    th:text="${profile.height} + ' cm'"
+                                            ></span>
+                                            <span
+                                                    class="badge bg-success text-light target_religion rounded-5"
+                                                    th:if="${profile.religion != null}"
+                                                    th:text="${profile.religion}"
+                                            ></span>
+                                        </div>
+                                        <div class="fs-5">
+                                            <div
+                                                    class="small mb-1 target_education"
+                                                    th:if="${profile.education != null}"
+                                            >
+                                                Studying at <span class="fw-bold" th:text="${profile.education}"></span>
+                                            </div>
+                                            <div
+                                                    class="small mb-1 target_occupation"
+                                                    th:if="${profile.occupation != null}"
+                                            >
+                                                Working at <span class="fw-bold" th:text="${profile.occupation}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="my-3 fs-5">
+                                            <div class="d-flex align-items-center">
+                                                <span class="target_bio">
+                                                    <i class="bi bi-quote lh-1"></i>
+                                                    <span th:text="${profile.bio == null ? 'No bio' : profile.bio}"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-none px-0 d-xl-block" style="flex:1;">
+                                <div class="text-dark p-4 d-md-flex flex-column justify-content-center h-100">
+                                    <h3 class="h2 mb-0 fw-bold">
+                                        <span class="target_name" th:text="${targetUser.name}">Name</span>, <span
+                                            class="target_age" th:text="${age}">99</span>
+                                    </h3>
+                                    <div class="mb-1">
+                                        <span class="badge bg-secondary text-light target_height"
+                                              th:if="${profile.height != null}"
+                                              th:text="${profile.height} + ' cm'"></span>
+                                        <span class="badge bg-success text-light target_religion"
+                                              th:if="${profile.religion != null}"
+                                              th:text="${profile.religion}"></span>
+                                    </div>
+                                    <div class="small mb-1 target_education" th:if="${profile.education != null}">Studying at <span class="fw-bold" th:text="${profile.education}"></span>
+                                    </div>
+                                    <div class="small mb-1 target_occupation" th:if="${profile.occupation != null}">Working at <span class="fw-bold" th:text="${profile.occupation}"></span>
+                                    </div>
+                                    <div class="my-3">
+                                        <div class="fw-bold small">About me</div>
+                                        <p class="target_bio">
+                                            <i class="bi bi-quote lh-1"></i>
+                                            <span th:text="${profile.bio == null ? 'No bio' : profile.bio}"></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

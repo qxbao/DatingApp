@@ -1,10 +1,7 @@
 package fit.se2.datingapp.controller;
 
 import fit.se2.datingapp.constants.Const;
-import fit.se2.datingapp.dto.ActiveConversationDTO;
-import fit.se2.datingapp.dto.ProfileDTO;
-import fit.se2.datingapp.dto.SwipeRequestDTO;
-import fit.se2.datingapp.dto.SwipeResponseDTO;
+import fit.se2.datingapp.dto.*;
 import fit.se2.datingapp.model.User;
 import fit.se2.datingapp.model.UserPhoto;
 import fit.se2.datingapp.model.UserProfile;
@@ -14,6 +11,7 @@ import fit.se2.datingapp.service.UserPhotoService;
 import fit.se2.datingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,16 +23,21 @@ import java.util.stream.Collectors;
 @RequestMapping(value="/api/")
 public class MatchingController {
 
+    private final ProfileService profileService;
+    private final UserPhotoService photoService;
+    private final MatchingService matchingService;
+    private final UserService userService;
     @Autowired
-    private ProfileService profileService;
-
-    @Autowired
-    private UserPhotoService photoService;
-
-    @Autowired
-    private MatchingService matchingService;
-    @Autowired
-    private UserService userService;
+    public MatchingController(
+            ProfileService profileService,
+            UserPhotoService photoService,
+            MatchingService matchingService,
+            UserService userService) {
+        this.profileService = profileService;
+        this.photoService = photoService;
+        this.matchingService = matchingService;
+        this.userService = userService;
+    }
 
     @PostMapping("/swipe")
     public ResponseEntity<SwipeResponseDTO> handleSwipe(@RequestBody SwipeRequestDTO swipeRequest) {
@@ -71,17 +74,11 @@ public class MatchingController {
 
         User profileUser = nextProfile.getUser();
         List<UserPhoto> photos = photoService.getUserPhotos(profileUser);
-        String mainPhotoUrl = photos.stream()
-                .filter(UserPhoto::isProfilePicture)
-                .map(UserPhoto::getPhotoUrl)
-                .findFirst()
-                .orElse(photos.isEmpty() ? null : photos.getFirst().getPhotoUrl());
 
         ProfileDTO profileDTO = ProfileDTO.builder()
                 .id(profileUser.getId())
                 .name(profileUser.getName())
                 .age(profileService.getAge(profileUser.getDob()))
-                .mainPhotoUrl(mainPhotoUrl)
                 .photoUrls(photos.stream().map(UserPhoto::getPhotoUrl).collect(Collectors.toList()))
                 .bio(nextProfile.getBio())
                 .education(nextProfile.getEducation())
@@ -92,6 +89,7 @@ public class MatchingController {
 
         return ResponseEntity.ok(profileDTO);
     }
+
     @GetMapping("/active-convers")
     public ResponseEntity<ActiveConversationDTO> getActiveConversations() {
         User currentUser = UserService.getCurrentUser();
@@ -126,4 +124,36 @@ public class MatchingController {
         }
     }
 
+    @PostMapping(value = "/unmatch")
+    public ResponseEntity<String> unmatch(
+        @ModelAttribute("user") User user,
+        @RequestBody Long targetId
+    ) {
+        try {
+            matchingService.unmatch(user, userService.getUserById(targetId));
+        } catch (Exception e) {
+            ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+        return ResponseEntity.ok("Ok");
+    }
+    
+    @PostMapping(value = "/report")
+    public ResponseEntity<String> reportUser(
+        @RequestBody UserReportDTO request,
+        @ModelAttribute("user") User user
+    ) {
+        if (!matchingService.isAMatchBetween(user, userService.getUserById(request.getReportedUserId()))) {
+            return ResponseEntity.badRequest().body("Error: You can only report users you have matched with.");
+        }
+        try {
+            matchingService.reportUser(
+                    user,
+                    userService.getUserById(request.getReportedUserId()),
+                    request.getReason());
+            unmatch(user, request.getReportedUserId());
+        } catch (Exception e) {
+            ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+        return ResponseEntity.ok("Ok");
+    }
 }

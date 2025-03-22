@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class User implements UserDetails {
     private static final String AUTHORITIES_DELIMITER = "::";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id", nullable = false)
@@ -28,7 +27,7 @@ public class User implements UserDetails {
     @Column(name="user_name", nullable = false, length = 50)
     private String name;
     @Column(name="user_dob", nullable = false)
-    private LocalDate dob; // date of birth
+    private LocalDate dob;
     @Column(name="user_email", nullable = false, unique = true)
     private String email;
     @Column(name="user_role", nullable = false)

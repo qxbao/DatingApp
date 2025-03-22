@@ -21,7 +21,7 @@
         <defs>
             <filter id="goo">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+                <feColorMatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
                 <feBlend in="SourceGraphic" in2="goo" />
             </filter>
         </defs>
@@ -44,24 +44,24 @@
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                 >
-                    <div th:style="'background-image:url('+ ${avatar}+'); width: 40px;'"
+                    <span th:style="'background-image:url('+ ${avatar}+'); width: 40px;'"
                          class="rounded-circle chatAvatar me-2"
-                         alt="User image">
-                    </div>
+                    >
+                    </span>
                     <span class="fw-bold" th:text="${user.name}"></span>
                     <i class="bi bi-three-dots ms-auto text-secondary fs-5"></i>
                 </button>
                 <ul class="dropdown-menu mx-auto">
                     <li>
-                        <a class="dropdown-item" href="/profile/update">
-                            <i class="bi bi-pencil"></i>
-                            Edit profile
+                        <a class="dropdown-item" href="/admin/dashboard" th:if="${user.role == 'ADMIN'}">
+                            <i class="bi bi-person"></i>
+                            Admin dashboard
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#">
-                            <i class="bi bi-gear"></i>
-                            Settings
+                        <a class="dropdown-item" href="/profile/update">
+                            <i class="bi bi-pencil"></i>
+                            Edit profile
                         </a>
                     </li>
                     <li>
@@ -104,15 +104,15 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav px-3 py-2 rounded-3" style="background-color: rgba(0, 0, 0, 0.5);">
                             <li class="nav-item py-2">
-                                <a class="nav-item text-light text-decoration-none" href="profile/update">
-                                    <i class="bi bi-pencil me-1"></i>
-                                    Edit profile
+                                <a class="nav-item text-light text-decoration-none" href="/admin/dashboard" th:if="${user.role == 'ADMIN'}">
+                                    <i class="bi bi-person me-1"></i>
+                                    Admin dashboard
                                 </a>
                             </li>
                             <li class="nav-item py-2">
-                                <a class="nav-item text-light text-decoration-none" href="#">
-                                    <i class="bi bi-gear me-1"></i>
-                                    Settings
+                                <a class="nav-item text-light text-decoration-none" href="/profile/update">
+                                    <i class="bi bi-pencil me-1"></i>
+                                    Edit profile
                                 </a>
                             </li>
                             <li class="nav-item py-2">

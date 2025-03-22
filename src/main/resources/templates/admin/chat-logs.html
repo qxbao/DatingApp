@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${'Chatlog for report ' + report.id}"></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        .chat-container {
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .message {
+            margin-bottom: 1rem;
+            max-width: 80%;
+            position: relative;
+        }
+        .message-content {
+            padding: 0.75rem;
+            border-radius: 1rem;
+        }
+        .sender-name {
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        .message.incoming {
+            margin-right: auto;
+        }
+        .message.incoming .message-content {
+            background-color: #f1f0f0;
+        }
+        .message.outgoing {
+            margin-left: auto;
+        }
+        .message.outgoing .message-content {
+            background-color: #d1e7ff;
+        }
+        body {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-3">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-chat-dots me-2"></i>
+                    <span th:text="${'Chat Log - Report #' + report.id}"></span>
+                </h5>
+                <button onclick="window.close()" class="btn btn-sm btn-light">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="chat-container">
+                <div th:each="chat: ${chatLogs}" th:with="isReporter=${chat.getSender().getId() == report.reporter.id}"
+                     th:class="${isReporter ? 'message incoming' : 'message outgoing'}">
+                    <div class="sender-name" th:text="${chat.getSender().getName()}"></div>
+                    <div class="message-content">
+                        <span th:text="${chat.getContent()}"></span>
+                    </div>
+                </div>
+                
+                <div th:if="${#lists.isEmpty(chatLogs)}" class="text-center my-5 text-muted">
+                    <i class="bi bi-chat-square-dots fs-1"></i>
+                    <p class="mt-3">No chat messages found</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

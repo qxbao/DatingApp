@@ -1,13 +1,8 @@
 package fit.se2.datingapp.service;
 
-import fit.se2.datingapp.model.User;
-import fit.se2.datingapp.model.UserSwipe;
-import fit.se2.datingapp.model.UserMatch;
-import fit.se2.datingapp.model.UserProfile;
-import fit.se2.datingapp.repository.UserSwipeRepository;
-import fit.se2.datingapp.repository.UserMatchRepository;
-import fit.se2.datingapp.repository.ProfileRepository;
-import fit.se2.datingapp.repository.UserRepository;
+import fit.se2.datingapp.model.*;
+import fit.se2.datingapp.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MatchingService {
     private final UserSwipeRepository swipeRepository;
     private final UserMatchRepository matchRepository;
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
-
-    @Autowired
-    public MatchingService(UserSwipeRepository swipeRepository, UserMatchRepository matchRepository, UserRepository userRepository, ProfileRepository profileRepository) {
-        this.swipeRepository = swipeRepository;
-        this.matchRepository = matchRepository;
-        this.userRepository = userRepository;
-        this.profileRepository = profileRepository;
-    }
+    private final UserReportRepository reportRepository;
 
     public boolean processSwipe(Long likerId, Long likedId, boolean isLike) {
         User liker = userRepository.findById(likerId).orElseThrow();
@@ -87,5 +76,21 @@ public class MatchingService {
 
     public boolean isSwiped(User a, User b) {
         return swipeRepository.findByLikerAndLiked(a, b).isPresent() || swipeRepository.findByLikerAndLiked(b, a).isPresent();
+    }
+
+    public void unmatch(User a, User b) {
+        matchRepository.removeUserMatchByUser1AndUser2(a, b);
+        matchRepository.removeUserMatchByUser1AndUser2(b, a);
+    }
+
+    public void reportUser(User a, User b, String reason) {
+        UserReport report = UserReport.builder()
+                .reporter(a)
+                .reportedUser(b)
+                .reason(reason)
+                .isSolved(false)
+                .time(LocalDateTime.now())
+                .build();
+        reportRepository.save(report);
     }
 }

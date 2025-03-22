@@ -32,6 +32,39 @@
                             <div class="fs-5 fw-semibold" th:text="${targetUser.name}"></div>
                             <div id="targetStatus" class="small text-secondary">Offline</div>
                         </div>
+                        <div class="dropstart ms-auto">
+                            <button class="btn btn-link text-secondary" type="button" id="dropdownMenuButton1"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots fs-5"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                                <li>
+                                    <a class="dropdown-item"
+                                       th:href="*{'/profile/view/' + targetUser.id}">
+                                        <i class="bi bi-person-square me-1"></i>
+                                        Open profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="#"
+                                       onclick="$('#unmatchModalToggle').modal('show')"
+                                    >
+                                        <i class="bi bi-ban me-1"></i>
+                                        Unmatch
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="#"
+                                       onclick="$('#reportModalToggle').modal('show')"
+                                    >
+                                        <i class="bi bi-flag me-1"></i>
+                                        Report
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="card-body overflow-y-auto" id="chatContainer"></div>
                     <div class="card-footer border-0 p-3 bg-white">
@@ -51,7 +84,74 @@
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="modal fade" id="unmatchModalToggle" aria-hidden="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-white text-dark shadow">
+                <div class="border-0 px-4 pt-4 pb-0 modal-header">
+                    <button
+                            type="button"
+                            class="btn-close btn-close-dark"
+                            aria-label="Close"
+                            role="button"
+                            onclick="$('#unmatchModalToggle').modal('hide')">
+                    </button>
+                </div>
+                <div class="px-4 modal-body d-flex p-5 align-items-center justify-content-center flex-column text-center">
+                    <i class="bi bi-ban mb-1 text-danger display-3"></i>
+                    <span class="fw-semibold fs-4 mb-2 text-danger-emphasis">
+                        Are you sure?
+                    </span>
+                    <p class="text-secondary mb-3">
+                        When you unmatch someone, you won't be able to contact each other or see each other's profiles anymore.
+                    </p>
+                    <button
+                        onclick="sendUnmatchRequest()"
+                        href="#"
+                        class="button bg-danger px-5"
+                    >
+                        Unmatch
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="reportModalToggle" aria-hidden="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-white text-dark shadow">
+                <div class="border-0 px-4 pt-4 pb-0 modal-header">
+                    <button
+                            type="button"
+                            class="btn-close btn-close-dark"
+                            aria-label="Close"
+                            role="button"
+                            onclick="$('#reportModalToggle').modal('hide')">
+                    </button>
+                </div>
+                <div class="px-4 modal-body d-flex p-5 align-items-center justify-content-center flex-column text-center">
+                    <i class="bi bi-flag mb-1 text-danger display-3"></i>
+                    <span class="fw-semibold fs-4 mb-2 text-danger-emphasis">
+                        Report
+                    </span>
+                    <p class="text-secondary mb-3">
+                        Please provide more details about the issue you are facing with this user
+                    </p>
+                    <textarea
+                        id="reportReason"
+                        class="form-control mb-3"
+                        rows="4"
+                        placeholder="Report description"
+                    ></textarea>
+                    <button
+                            onclick="sendUserReport()"
+                            href="#"
+                            class="button bg-danger px-5"
+                    >
+                        Unmatch & Report
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

@@ -10,7 +10,6 @@ public class ProfileDTO {
     private Long id;
     private String name;
     private int age;
-    private String mainPhotoUrl;
     private List<String> photoUrls;
     private String bio;
     private String occupation;

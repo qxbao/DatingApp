@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const card = document.getElementById('profile-card');
                 card.dataset.profileId = data.id;
                 if (data.photoUrls.length > 0) initPhotoCarousel(data.photoUrls);
-                else initPhotoCarousel([data.mainPhotoUrl]);
+                else initPhotoCarousel(["/image/user.png"]);
                 writeAllElements("target_name", data.name);
                 writeAllElements("target_age", data.age);
 

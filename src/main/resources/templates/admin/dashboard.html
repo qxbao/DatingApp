@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        .dashboard-header {
+            background-color: #343a40;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border-radius: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            border-top-left-radius: 0.5rem !important;
+            border-top-right-radius: 0.5rem !important;
+        }
+        .table th {
+            border-top: none;
+            font-weight: 600;
+        }
+        .btn-action {
+            transition: all 0.2s;
+        }
+        .btn-action:hover {
+            transform: scale(1.05);
+        }
+        .empty-state {
+            padding: 3rem 1rem;
+        }
+        .filter-badge {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-badge:hover {
+            transform: scale(1.05);
+        }
+        .filter-badge.active {
+            box-shadow: 0 0 0 2px #fff;
+        }
+    </style>
+</head>
+<body>
+<header class="dashboard-header bg-primary text-white">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="h3 mb-0 fw-bold">Dashboard</h1>
+            <div>
+                <a href="/" class="btn btn-outline-light btn-sm me-2">
+                    <i class="bi bi-house-door me-1"></i> Back to Home
+                </a>
+                <a href="/logout" class="btn btn-outline-light btn-sm d-none d-md-inline">
+                    <i class="bi bi-box-arrow-right me-1"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-flag-fill me-2"></i>
+                        Reports
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <a th:href="@{/admin/dashboard(filter='unsolved')}"
+                           th:class="${currentFilter == 'unsolved' || currentFilter == null ? 'badge bg-light text-dark filter-badge active' : 'badge bg-light text-dark filter-badge'}">
+                            Pending <span class="ms-1 badge bg-primary rounded-pill" th:text="${currentFilter == 'unsolved' ? #lists.size(reports) : ''}"></span>
+                        </a>
+                        <a th:href="@{/admin/dashboard(filter='resolved')}"
+                           th:class="${currentFilter == 'resolved' ? 'badge bg-light text-dark filter-badge active' : 'badge bg-light text-dark filter-badge'}">
+                            Resolved <span class="ms-1 badge bg-success rounded-pill" th:text="${currentFilter == 'resolved' ? #lists.size(reports) : ''}"></span>
+                        </a>
+                        <a th:href="@{/admin/dashboard(filter='all')}"
+                           th:class="${currentFilter == 'all' ? 'badge bg-light text-dark filter-badge active' : 'badge bg-light text-dark filter-badge'}">
+                            All <span class="ms-1 badge bg-secondary rounded-pill" th:text="${currentFilter == 'all' ? #lists.size(reports) : ''}"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">ID</th>
+                                <th>Reporter</th>
+                                <th>Reported User</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="report : ${reports}">
+                                <td class="ps-4" th:text="${report.id}"></td>
+                                <td th:text="${report.reporter.name}"></td>
+                                <td th:text="${report.reportedUser.name}"></td>
+                                <td>
+                                    <span th:text="${#strings.length(report.reason) > 50 ? #strings.substring(report.reason, 0, 50) + '...' : report.reason}"></span>
+                                </td>
+                                <td>
+                                    <span th:if="${report.solved}" class="badge bg-success">Resolved</span>
+                                    <span th:unless="${report.solved}" class="badge bg-warning">Pending</span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a th:href="@{/admin/report/{id}(id=${report.id})}" class="btn btn-sm btn-primary btn-action">
+                                        <i class="bi bi-eye me-1"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(reports)}">
+                                <td colspan="6" class="text-center empty-state">
+                                    <i class="bi bi-check-circle text-success fs-1 mb-3 d-block"></i>
+                                    <p class="text-muted mb-0">No reports found for the selected filter</p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

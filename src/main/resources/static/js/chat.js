@@ -113,3 +113,30 @@ const onMessageReceived = (payload) => {
         }
     }
 }
+
+const sendUnmatchRequest = () => {
+    $('#unmatchModalToggle').modal('hide');
+    $.ajax({
+        type: "POST",
+        url:  "/api/unmatch",
+        data: JSON.stringify({ targetId : tuid  }),
+        contentType: "application/json",
+    }).done(function () {
+        window.location.href = "/";
+    });
+}
+
+const sendUserReport = () => {
+    const reason = document.getElementById('reportReason').value;
+    $('#reportModalToggle').modal('hide');
+    $.ajax({
+        type: "POST",
+        url:  "/api/report",
+        data: JSON.stringify({ reportedUserId : tuid, reason }),
+        contentType: "application/json",
+    }).done(function () {
+        window.location.href = "/";
+    }).catch(function (e) {
+        alert(e.message);
+    });
+}

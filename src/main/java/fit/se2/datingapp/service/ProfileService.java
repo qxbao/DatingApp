@@ -29,4 +29,7 @@ public class ProfileService {
         }
         return age;
     }
+    public UserProfile findByUser(User user) {
+        return profileRepository.findByUser(user);
+    }
 }

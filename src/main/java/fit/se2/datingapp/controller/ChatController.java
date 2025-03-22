@@ -31,22 +31,19 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/chat")
 public class ChatController {
-
     private final MatchingService matchingService;
     private final UserService userService;
     private final UserPhotoService userPhotoService;
     private final SimpMessagingTemplate template;
     private final MessageService messageService;
-    private final MessageRepository messageRepository;
 
     @Autowired
-    public ChatController(MatchingService matchingService, UserService userService, UserPhotoService userPhotoService, SimpMessagingTemplate template, MessageService messageService, MessageRepository messageRepository) {
+    public ChatController(MatchingService matchingService, UserService userService, UserPhotoService userPhotoService, SimpMessagingTemplate template, MessageService messageService) {
         this.matchingService = matchingService;
         this.userService = userService;
         this.userPhotoService = userPhotoService;
         this.template = template;
         this.messageService = messageService;
-        this.messageRepository = messageRepository;
     }
 
     @PostMapping("/sendMessage")
@@ -107,7 +104,7 @@ public class ChatController {
 
         }
         int offset = toIndex - fromIndex;
-        List<Message> messages = messageRepository.getMessagesByRange(user, receiver, fromIndex, offset);
+        List<Message> messages = messageService.getMessagesByRange(user, receiver, fromIndex, offset);
         return ResponseEntity.ok(
                 GetMessageResponseDTO.builder()
                     .messages(messages.stream().map(Message::getContent).toList())

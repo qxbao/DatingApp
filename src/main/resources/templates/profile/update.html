@@ -121,10 +121,17 @@
                                     </select>
                                 </label>
                             </div>
-                            <div class="col-12 d-flex">
-                                <button class="button mx-auto border-3 fw-bold py-3 px-5 rounded-5">
+                            <div class="col-12 d-flex justify-content-center gap-3">
+                                <button class="button border-3 fw-bold py-3 px-5 rounded-5">
                                     Save profile changes
                                 </button>
+                                <a
+                                    th:href="${'/profile/view/' + user.id}"
+                                    target="_blank"
+                                    class="button border-3 fw-bold py-3 px-5 bg-secondary rounded-5 text-decoration-none"
+                                >
+                                    Preview profile
+                                </a>
                             </div>
                         </form>
                     </div>

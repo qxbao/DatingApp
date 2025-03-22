@@ -16,4 +16,10 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
             "m.date DESC " +
             "LIMIT :offset OFFSET :fromIndex")
     List<Message> getMessagesByRange(User a, User b, int fromIndex, int offset);
+    @Query("SELECT m FROM Message m WHERE " +
+            "(m.sender.id = :user1Id AND m.receiver.id = :user2Id) OR " +
+            "(m.sender.id = :user2Id AND m.receiver.id = :user1Id) " +
+            "ORDER BY m.date ASC")
+    List<Message> findMessagesBetweenUsers(Long user1Id, Long user2Id);
+
 }
