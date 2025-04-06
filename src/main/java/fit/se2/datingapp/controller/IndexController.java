@@ -1,11 +1,9 @@
 package fit.se2.datingapp.controller;
 
 import fit.se2.datingapp.model.User;
-import fit.se2.datingapp.repository.UserRepository;
 import fit.se2.datingapp.service.ProfileService;
 import fit.se2.datingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class IndexController {
     private final ProfileService profileService;
     @Autowired
-    public IndexController(UserService userService, ProfileService profileService) {
+    public IndexController(ProfileService profileService) {
         this.profileService = profileService;
     }
     @GetMapping("/")
@@ -35,10 +33,7 @@ public class IndexController {
         }
     }
     @GetMapping("/banned")
-    public String bannedPage(Authentication authentication) {
-        if (authentication == null || authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("BANNED"))) {
-            return "redirect:/";
-        }
+    public String bannedPage() {
         return "banned";
     }
 }

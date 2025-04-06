@@ -1,4 +1,4 @@
-package fit.se2.datingapp;
+package fit.se2.datingapp.security;
 
 import fit.se2.datingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +13,18 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+    private final UserService userService;
+    private final ReloadUserAuthentication reloadUserAuthentication;
     @Autowired
-    private UserService userService;
+    public WebSecurityConfig(UserService userService) {
+        this.userService = userService;
+        this.reloadUserAuthentication = new ReloadUserAuthentication(userService);
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -40,7 +46,8 @@ public class WebSecurityConfig {
                     .logoutSuccessUrl("/")
                     .permitAll()
             )
-            .csrf(AbstractHttpConfigurer::disable);
+            .csrf(AbstractHttpConfigurer::disable)
+            .addFilterBefore(reloadUserAuthentication, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean
