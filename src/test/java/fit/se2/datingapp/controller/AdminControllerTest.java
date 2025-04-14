@@ -6,11 +6,9 @@ import fit.se2.datingapp.model.UserReport;
 import fit.se2.datingapp.service.ReportService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 

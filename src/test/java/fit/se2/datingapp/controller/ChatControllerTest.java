@@ -1,6 +1,5 @@
 package fit.se2.datingapp.controller;
 
-import fit.se2.datingapp.constants.Const;
 import fit.se2.datingapp.dto.GetMessageResponseDTO;
 import fit.se2.datingapp.dto.SendMessageDTO;
 import fit.se2.datingapp.dto.SendMessageResponseDTO;
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,7 +94,6 @@ public class ChatControllerTest {
         assertNotNull(response.getBody());
     }
 
-
     @Test
     public void testSendMessage_Failure_InvalidReceiver() {
         Long senderId = 1L;
@@ -157,7 +156,7 @@ public class ChatControllerTest {
         Long receiverId = 2L;
         User mockSender = mock(User.class);
         when(mockSender.getId()).thenReturn(senderId);
-        when(userService.getUserById(receiverId)).thenReturn(null); // Invalid receiver
+        when(userService.getUserById(receiverId)).thenReturn(null);
 
         ResponseEntity<GetMessageResponseDTO> response = chatController.getMessage(0, 10, receiverId, mockSender);
 
@@ -194,55 +193,59 @@ public class ChatControllerTest {
 
     @Test
     public void testGetChatPage_Success() {
-        // Mock data
-        Long targetUserId = 2L;
-        User mockUser = mock(User.class);
-        User mockTargetUser = mock(User.class);
-        when(mockUser.getId()).thenReturn(1L);
-        when(mockTargetUser.getId()).thenReturn(targetUserId);
-        when(userService.getUserById(targetUserId)).thenReturn(mockTargetUser);
-        when(matchingService.isAMatchBetween(mockUser, mockTargetUser)).thenReturn(true);
+        try (MockedStatic<UserService> mockedStatic = mockStatic(UserService.class)) {
+            Long targetUserId = 2L;
+            User mockUser = mock(User.class);
+            User mockTargetUser = mock(User.class);
 
-        // Sửa lại chỗ tạo UserPhoto
-        UserPhoto mockPhoto = UserPhoto.builder()
-                .id(1L)
-                .user(mockTargetUser)
-                .photoUrl("mock-url")
-                .isProfilePicture(true)
-                .uploadDate(LocalDateTime.now())
-                .build();
-        when(userPhotoService.getUserAvatar(mockTargetUser)).thenReturn(mockPhoto);
+            when(mockUser.getId()).thenReturn(1L);
+            when(mockTargetUser.getId()).thenReturn(targetUserId);
 
-        Model mockModel = mock(Model.class);
+            mockedStatic.when(UserService::getCurrentUser).thenReturn(mockUser);
 
-        // Call the method
-        String viewName = chatController.getChatPage(targetUserId.toString(), mockModel);
+            when(userService.getUserById(targetUserId)).thenReturn(mockTargetUser);
+            when(matchingService.isAMatchBetween(mockUser, mockTargetUser)).thenReturn(true);
 
-        // Verify behavior
-        verify(mockModel).addAttribute("uid", targetUserId.toString());
-        verify(mockModel).addAttribute("targetUser", mockTargetUser);
-        verify(mockModel).addAttribute("targetAvatar", "mock-url");
-        assertEquals("chat", viewName);
+            UserPhoto mockPhoto = UserPhoto.builder()
+                    .id(1L)
+                    .user(mockTargetUser)
+                    .photoUrl("mock-url")
+                    .isProfilePicture(true)
+                    .uploadDate(LocalDateTime.now())
+                    .build();
+            when(userPhotoService.getUserAvatar(mockTargetUser)).thenReturn(mockPhoto);
+
+            Model mockModel = mock(Model.class);
+
+            String viewName = chatController.getChatPage(targetUserId.toString(), mockModel);
+
+            verify(mockModel).addAttribute("uid", targetUserId.toString());
+            verify(mockModel).addAttribute("targetUser", mockTargetUser);
+            verify(mockModel).addAttribute("targetAvatar", "mock-url");
+            assertEquals("chat", viewName);
+        }
     }
-
 
     @Test
     public void testGetChatPage_Failure_NoMatch() {
-        // Mock data
         Long targetUserId = 2L;
         User mockUser = mock(User.class);
         User mockTargetUser = mock(User.class);
-        when(mockUser.getId()).thenReturn(1L);
-        when(mockTargetUser.getId()).thenReturn(targetUserId);
-        when(userService.getUserById(targetUserId)).thenReturn(mockTargetUser);
-        when(matchingService.isAMatchBetween(mockUser, mockTargetUser)).thenReturn(false);
 
-        Model mockModel = mock(Model.class);
+        try (MockedStatic<UserService> mockedStatic = mockStatic(UserService.class)) {
+            when(mockUser.getId()).thenReturn(1L);
+            when(mockTargetUser.getId()).thenReturn(targetUserId);
 
-        // Call the method
-        String viewName = chatController.getChatPage(targetUserId.toString(), mockModel);
+            mockedStatic.when(UserService::getCurrentUser).thenReturn(mockUser);
 
-        // Verify behavior
-        assertEquals("redirect:/", viewName);
+            when(userService.getUserById(targetUserId)).thenReturn(mockTargetUser);
+            when(matchingService.isAMatchBetween(mockUser, mockTargetUser)).thenReturn(false);
+
+            Model mockModel = mock(Model.class);
+
+            String viewName = chatController.getChatPage(targetUserId.toString(), mockModel);
+
+            assertEquals("redirect:/", viewName);
+        }
     }
 }
