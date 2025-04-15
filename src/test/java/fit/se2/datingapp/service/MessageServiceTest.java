@@ -28,7 +28,7 @@ public class MessageServiceTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         sender = User.builder().id(1L).name("Nam Vu").build();
-        receiver = User.builder().id(2L).name("Le Thanh Thu").build();
+        receiver = User.builder().id(2L).name("Nguyen Kim Dinh").build();
     }
 
     @Test

@@ -31,7 +31,7 @@ public class MatchingControllerTest {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         closeable.close();
     }
 

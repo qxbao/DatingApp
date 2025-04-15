@@ -28,7 +28,7 @@ public class MatchingServiceTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         userA = User.builder().id(1L).name("Nam Vu").gender("MALE").preference("FEMALE").build();
-        userB = User.builder().id(2L).name("Le Thanh Thu").gender("FEMALE").preference("MALE").build();
+        userB = User.builder().id(2L).name("Nguyen Kim Dinh").gender("FEMALE").preference("MALE").build();
     }
 
     @Test
@@ -108,7 +108,7 @@ public class MatchingServiceTest {
     }
 
     @Test
-    public void testUnmatch() {
+    public void testUnMatch() {
         matchingService.unmatch(userA, userB);
 
         verify(matchRepository).removeUserMatchByUser1AndUser2(userA, userB);

@@ -25,6 +25,7 @@ public class ReportServiceTest {
     @InjectMocks private ReportService reportService;
 
     private UserReport report;
+    private User reporter;
     private User reportedUser;
     private User admin;
 
@@ -32,8 +33,8 @@ public class ReportServiceTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        User reporter = User.builder().id(1L).name("Alice").role("USER").build();
-        reportedUser = User.builder().id(2L).name("Bob").role("USER").build();
+        reporter = User.builder().id(1L).name("Nam Vu").role("USER").build();
+        reportedUser = User.builder().id(2L).name("Nguyen Kim Dinh").role("USER").build();
         admin = User.builder().id(3L).name("Admin").role("ADMIN").build();
 
         report = UserReport.builder()

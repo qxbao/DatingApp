@@ -33,7 +33,7 @@ public class UserServiceTest {
                 .id(1L)
                 .name("Nam Vu")
                 .dob(LocalDate.of(2004, 4, 12))
-                .email("namvu369@example.com")
+                .email("namvu369@gmail.com")
                 .role("USER")
                 .gender("MALE")
                 .preference("FEMALE")

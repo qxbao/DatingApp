@@ -57,7 +57,7 @@ public class ProfileControllerTest {
     }
 
     @Test
-    void testCreateProfilePage_ProfileExists() {
+    public void testCreateProfilePage_ProfileExists() {
         try (MockedStatic<UserService> mockedStatic = mockStatic(UserService.class)) {
             User user = User.builder().id(1L).build();
             mockedStatic.when(UserService::getCurrentUser).thenReturn(user);
@@ -70,7 +70,7 @@ public class ProfileControllerTest {
     }
 
     @Test
-    void testUpdateProfilePage_ProfileNotExist() {
+    public void testUpdateProfilePage_ProfileNotExist() {
         try (MockedStatic<UserService> mockedStatic = mockStatic(UserService.class)) {
             User user = User.builder().id(1L).build();
             mockedStatic.when(UserService::getCurrentUser).thenReturn(user);
@@ -82,7 +82,7 @@ public class ProfileControllerTest {
     }
 
     @Test
-    void testUpdateProfilePage_ProfileExists() {
+    public void testUpdateProfilePage_ProfileExists() {
         try (MockedStatic<UserService> mockedStatic = mockStatic(UserService.class)) {
             User user = User.builder().id(1L).build();
             mockedStatic.when(UserService::getCurrentUser).thenReturn(user);
@@ -100,9 +100,9 @@ public class ProfileControllerTest {
     }
 
     @Test
-    void testViewProfilePage_AsMatchOrAdmin() {
+    public void testViewProfilePage_AsMatchOrAdmin() {
         User user = User.builder().id(1L).role("USER").build();
-        User target = User.builder().id(2L).dob(LocalDate.of(2000, 1, 1)).build();
+        User target = User.builder().id(2L).dob(LocalDate.of(2004, 3, 25)).build();
         UserProfile profile = UserProfile.builder().user(target).build();
         when(userService.getUserById(2L)).thenReturn(target);
         when(matchingService.isAMatchBetween(user, target)).thenReturn(true);
@@ -110,7 +110,7 @@ public class ProfileControllerTest {
         when(userPhotoService.getUserPhotos(target)).thenReturn(List.of(
                 UserPhoto.builder().photoUrl("url").build()
         ));
-        when(profileService.getAge(target.getDob())).thenReturn(25);
+        when(profileService.getAge(target.getDob())).thenReturn(21);
 
         String view = controller.viewProfilePage(model, 2L, user);
 
@@ -118,11 +118,11 @@ public class ProfileControllerTest {
         verify(model).addAttribute("photos", List.of("\"url\""));
         verify(model).addAttribute("profile", profile);
         verify(model).addAttribute("targetUser", target);
-        verify(model).addAttribute("age", 25);
+        verify(model).addAttribute("age", 21);
     }
 
     @Test
-    void testViewProfilePage_Unauthorized() {
+    public void testViewProfilePage_Unauthorized() {
         User user = User.builder().id(1L).role("USER").build();
         User target = User.builder().id(2L).build();
         when(userService.getUserById(2L)).thenReturn(target);
@@ -133,7 +133,7 @@ public class ProfileControllerTest {
     }
 
     @Test
-    void testCreateProfile() {
+    public void testCreateProfile() {
         try (MockedStatic<UserService> mockedStatic = mockStatic(UserService.class)) {
             User user = User.builder().id(1L).build();
             mockedStatic.when(UserService::getCurrentUser).thenReturn(user);
@@ -148,7 +148,7 @@ public class ProfileControllerTest {
     }
 
     @Test
-    void testUpdateProfile() {
+    public void testUpdateProfile() {
         UserProfile profile = new UserProfile();
         String result = controller.updateProfile(profile);
 
@@ -157,7 +157,7 @@ public class ProfileControllerTest {
     }
 
     @Test
-    void testAddPhoto_ValidUrl() {
+    public void testAddPhoto_ValidUrl() {
         try (MockedStatic<UserService> mockedStatic = mockStatic(UserService.class)) {
             User user = User.builder().id(1L).build();
             mockedStatic.when(UserService::getCurrentUser).thenReturn(user);
@@ -171,7 +171,7 @@ public class ProfileControllerTest {
     }
 
     @Test
-    void testAddPhoto_InvalidUrl() {
+    public void testAddPhoto_InvalidUrl() {
         AddPhotoDTO dto = new AddPhotoDTO();
 
         ResponseEntity<HttpStatus> response = controller.addPhoto(dto);
@@ -179,7 +179,7 @@ public class ProfileControllerTest {
     }
 
     @Test
-    void testRemovePhoto() {
+    public void testRemovePhoto() {
         RemovePhotoDTO dto = new RemovePhotoDTO();
         dto.setId(1L);
 

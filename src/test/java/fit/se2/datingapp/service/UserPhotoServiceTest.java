@@ -34,7 +34,7 @@ public class UserPhotoServiceTest {
                 .id(1L)
                 .name("Nam Vu")
                 .dob(LocalDate.of(2004, 4, 12))
-                .email("namvu369@example.com")
+                .email("namvu369@gmail.com")
                 .role("USER")
                 .gender("MALE")
                 .preference("FEMALE")
@@ -52,7 +52,7 @@ public class UserPhotoServiceTest {
         photo2 = UserPhoto.builder()
                 .id(2L)
                 .user(user)
-                .photoUrl("https://photo.com/photo2.jpg")
+                .photoUrl("https://photo.com/photo2.png")
                 .isProfilePicture(true)
                 .uploadDate(LocalDateTime.now())
                 .build();

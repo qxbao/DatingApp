@@ -61,7 +61,7 @@ public class ChatControllerTest {
     public void testSendMessage_Success() {
         Long senderId = 1L;
         Long receiverId = 2L;
-        String content = "Test for send message success!";
+        String content = "Success";
 
         User mockSender = mock(User.class);
         User mockReceiver = mock(User.class);
@@ -98,7 +98,7 @@ public class ChatControllerTest {
     public void testSendMessage_Failure_InvalidReceiver() {
         Long senderId = 1L;
         Long receiverId = 2L;
-        String content = "Test for send message failure!";
+        String content = "Failure";
 
         User mockSender = mock(User.class);
         when(mockSender.getId()).thenReturn(senderId);
@@ -130,13 +130,13 @@ public class ChatControllerTest {
                 Message.builder()
                         .sender(mockSender)
                         .receiver(mockReceiver)
-                        .content("Test for get message success!")
+                        .content("Massage 1")
                         .date(LocalDateTime.now())
                         .build(),
                 Message.builder()
                         .sender(mockSender)
                         .receiver(mockReceiver)
-                        .content("Test for get message failure!")
+                        .content("Massage 2")
                         .date(LocalDateTime.now())
                         .build()
         );
@@ -181,13 +181,13 @@ public class ChatControllerTest {
         User mockReceiver = mock(User.class);
         when(userService.getUserById(senderId)).thenReturn(mockSender);
         when(userService.getUserById(receiverId)).thenReturn(mockReceiver);
-        when(mockSender.getEmail()).thenReturn("sender@example.com");
-        when(mockReceiver.getEmail()).thenReturn("receiver@example.com");
+        when(mockSender.getEmail()).thenReturn("sender@gmail.com");
+        when(mockReceiver.getEmail()).thenReturn("receiver@gmail.com");
 
         chatController.addUser(socketMessage, mockAccessor);
 
-        verify(template).convertAndSendToUser(eq("sender@example.com"), eq("/queue/chat"), eq(socketMessage));
-        verify(template).convertAndSendToUser(eq("receiver@example.com"), eq("/queue/chat"), eq(socketMessage));
+        verify(template).convertAndSendToUser(eq("sender@gmail.com"), eq("/queue/chat"), eq(socketMessage));
+        verify(template).convertAndSendToUser(eq("receiver@gmail.com"), eq("/queue/chat"), eq(socketMessage));
         verify(mockAccessor).getSessionAttributes();
     }
 

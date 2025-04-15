@@ -99,16 +99,16 @@ public class AdminControllerTest {
         mockChatLogs.add(
                 Message.builder()
                         .id(1L)
-                        .content("Message content")
-                        .sender(mockReportedUser)  // ID 6
-                        .receiver(mockReporter)    // ID 3
+                        .content("Message 1")
+                        .sender(mockReportedUser)
+                        .receiver(mockReporter)
                         .date(LocalDateTime.now())
                         .build()
         );
         mockChatLogs.add(
                 Message.builder()
                         .id(2L)
-                        .content("Another message")
+                        .content("Message 2")
                         .sender(mockReportedUser)
                         .receiver(mockReporter)
                         .date(LocalDateTime.now())

@@ -35,7 +35,7 @@ public class UserControllerTest {
         CreateAccountRequestDTO dto = new CreateAccountRequestDTO();
         dto.setName("Nam Vu");
         dto.setEmail("namvu369@gmail.com");
-        dto.setDob("2004-04-13");
+        dto.setDob("2004-04-12");
         dto.setGender("MALE");
         dto.setPreference("FEMALE");
         dto.setPassword("12345678");
@@ -46,7 +46,7 @@ public class UserControllerTest {
     public void testRegister_Success() {
         CreateAccountRequestDTO requestDTO = buildValidRequest();
 
-        when(profileService.getAge(LocalDate.parse(requestDTO.getDob()))).thenReturn(24);
+        when(profileService.getAge(LocalDate.parse(requestDTO.getDob()))).thenReturn(21);
         when(userService.isEmailExist(requestDTO.getEmail())).thenReturn(false);
 
         ResponseEntity<CreateAccountResponseDTO> response = userController.register(requestDTO);
@@ -87,9 +87,9 @@ public class UserControllerTest {
     @Test
     public void testRegister_UserUnder18() {
         CreateAccountRequestDTO requestDTO = buildValidRequest();
-        requestDTO.setDob("2010-01-11");
+        requestDTO.setDob("2010-04-30");
 
-        when(profileService.getAge(LocalDate.parse("2010-01-11"))).thenReturn(15);
+        when(profileService.getAge(LocalDate.parse("2010-04-30"))).thenReturn(14);
 
         ResponseEntity<CreateAccountResponseDTO> response = userController.register(requestDTO);
 
@@ -100,7 +100,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testRegister_EmailAlreadyExists() {
+    public void testRegister_EmailAlreadyExists() {
         CreateAccountRequestDTO requestDTO = buildValidRequest();
 
         when(profileService.getAge(LocalDate.parse(requestDTO.getDob()))).thenReturn(21);
@@ -115,7 +115,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testRegister_MissingFields() {
+    public void testRegister_MissingFields() {
         CreateAccountRequestDTO requestDTO = new CreateAccountRequestDTO();
 
         ResponseEntity<CreateAccountResponseDTO> response = userController.register(requestDTO);
@@ -127,7 +127,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testRegister_CreateThrowsException() {
+    public void testRegister_CreateThrowsException() {
         CreateAccountRequestDTO requestDTO = buildValidRequest();
 
         when(profileService.getAge(LocalDate.parse(requestDTO.getDob()))).thenReturn(25);
