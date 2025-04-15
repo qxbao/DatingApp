@@ -127,10 +127,10 @@ public class MatchingController {
     @PostMapping(value = "/unmatch")
     public ResponseEntity<String> unmatch(
         @ModelAttribute("user") User user,
-        @RequestBody Long targetId
+        @RequestBody UnmatchRequestDTO request
     ) {
         try {
-            matchingService.unmatch(user, userService.getUserById(targetId));
+            matchingService.unmatch(user, userService.getUserById(request.getTargetId()));
         } catch (Exception e) {
             ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
@@ -150,7 +150,9 @@ public class MatchingController {
                     user,
                     userService.getUserById(request.getReportedUserId()),
                     request.getReason());
-            unmatch(user, request.getReportedUserId());
+            UnmatchRequestDTO unmatchRequest = new UnmatchRequestDTO();
+            unmatchRequest.setTargetId(request.getReportedUserId());
+            unmatch(user, unmatchRequest);
         } catch (Exception e) {
             ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
