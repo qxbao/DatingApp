@@ -196,6 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCarouselPhoto(carousel);
 
         const indicatorsContainer = carousel.querySelector('.photo-indicators');
+        indicatorsContainer.innerHTML = '';
         photoUrls.forEach((_, index) => {
             const indicator = document.createElement('span');
             indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
