@@ -160,14 +160,17 @@ public class MatchingControllerTest {
 
 
     @Test
-    public void testUnMatch_Success() {
+    public void testUnmatch_Success() {
         User user = User.builder().id(1L).build();
         Long targetId = 2L;
         User targetUser = User.builder().id(targetId).build();
 
+        UnmatchRequestDTO requestDTO = new UnmatchRequestDTO();
+        requestDTO.setTargetId(targetId);
+
         when(userService.getUserById(targetId)).thenReturn(targetUser);
 
-        ResponseEntity<String> response = controller.unmatch(user, targetId);
+        ResponseEntity<String> response = controller.unmatch(user, requestDTO);
 
         verify(matchingService, times(1)).unmatch(user, targetUser);
         assertEquals("Ok", response.getBody());
